@@ -1,0 +1,48 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: auto;
+    grid-gap: 10px;
+}
+
+.grid-item {
+    border-width: 3px;
+    border-radius: 6px;
+    border-style: outset;
+    padding: 9px;
+    width: 150px;
+    height: 140px;
+    text-align: center;
+    color: #000000
+    font-family: Helvetica;
+    font-size: 11pt;
+    font-weight: bolder;
+    -webkit-font-smoothing: antialiased
+}
+.btn-img{
+  width: 66px;
+  height: 66px;
+  padding: 7px;
+}
+#las-header-text h1 {
+  font-size: 20pt !important;
+  font-weight: bolder;
+  color: #000000 !important;
+  font-family: Helvetica;
+  padding: 0px;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+}
+#las-logo, #logoftc {
+  display: inline-block;
+  padding: 10px 10px;
+  margin: 0px;
+  width: 75% 20%;
+  height: 115px;
+}
+#las-header {
+    position: relative;
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+}
