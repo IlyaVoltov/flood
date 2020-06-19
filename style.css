@@ -1,48 +1,51 @@
-.grid-container {
-    display: grid;
-    grid-template-columns: auto;
-    grid-gap: 10px;
-}
-
-.grid-item {
-    border-width: 3px;
-    border-radius: 6px;
-    border-style: outset;
-    padding: 9px;
-    width: 150px;
-    height: 140px;
-    text-align: center;
-    color: #000000
-    font-family: Helvetica;
-    font-size: 11pt;
-    font-weight: bolder;
-    -webkit-font-smoothing: antialiased
-}
-.btn-img{
-  width: 66px;
-  height: 66px;
-  padding: 7px;
-}
-#las-header-text h1 {
-  font-size: 20pt !important;
-  font-weight: bolder;
-  color: #000000 !important;
-  font-family: Helvetica;
+#las-logo{
+  display: block;
   padding: 0px;
-  text-align: left;
-  -webkit-font-smoothing: antialiased;
-}
-#las-logo, #logoftc {
-  display: inline-block;
-  padding: 10px 10px;
   margin: 0px;
-  width: 75% 20%;
-  height: 115px;
+  width: 80%;
+  height: 110px;
+  position: center;
 }
 #las-header {
-    position: relative;
-    width: 100%;
-    display: block;
-    margin: 0 auto;
-    padding: 0;
+  background-color: rgb(74,159,136);    
+  position: center;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+  padding: 0;
 }
+#las-header-text h1 {
+  background-color: white;   
+  font-size: 30pt !important;
+  font-weight: bolder;
+  font-family: Helvetica;
+  padding: 15px;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+}
+#alarm-logo {
+  height:84px; 
+  width:84px;
+}
+.table {
+  border-collapse: collapse;
+  border: 1px solid white;
+  width: 100%;
+}
+Th, Td {
+  border: 1px solid white;
+  width: 20%;
+  padding: 10px 15px;
+  text-align: center; 
+  vertical-align: middle; 
+  font-family: Helvetica;
+}
+Th {
+  background-color: rgb(168,168,168);
+  color: white;
+}
+Td {
+  background-color: rgb(237,237,237);
+}
+
+
