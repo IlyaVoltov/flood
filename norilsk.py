@@ -1,278 +1,113 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import dash_table
+import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
-import numpy as np
-from shapely.geometry import Polygon, Point
-import json
+import numpy  as np
+import base64
+
+def generate_transition():
+
+    transition = html.Div([
+            dcc.Link('Следующая страница -> Мониторинг секторов', href='/norilsk2', id='link-2', className='transition'),
+        ], className='generate_transition')
+
+    return transition
+
+def generate_frontpage(title):
+    frontpage = html.Div(id='las-header', children=[
+        html.A(
+            html.Img(
+                id='las-logo',
+                src='data:image/png;base64,{}'.format(
+                    base64.b64encode(
+                        open('assets/rosprirodnadzor.png', 'rb').read()
+                    ).decode()
+                )), href='https://rpn.gov.ru/'),
+        html.Div(
+            id='las-header-text',
+            children=[
+                html.H1(title)]
+                )
+        ])
+
+    return  frontpage
 
 first_june = pd.read_csv('data//Разлив - Лист1.csv',
-                         usecols=['date', 'time_start', 'time_end',
+                         usecols = ['date', 'time_start', 'time_end',
                                     'lon', 'lat', 'val', 'standard', 'cluster']) 
 
-input_data = first_june.replace(',', '.', regex=True)
+input_data = first_june.replace(',', '.', regex = True)
 input_data.iloc[:, 3:] = input_data.iloc[:, 3:].astype('float64')
-input_data['excess'] = input_data.val / input_data.standard
+input_data['excess'] = input_data.val / input_data.standard 
 
-data_table = pd.read_csv('data//Разлив - Лист2.csv')
+fict = [['29.05.2020', None, None, None, None, None, None, None, None],
+        ['30.05.2020', None, None, None, None, None, None, None, None],
+        ['31.05.2020', None, None, None, None, None, None, None, None]]
 
+input_update = pd.DataFrame(fict, columns = input_data.columns)
+in_data = pd.concat([input_update, input_data])
 
-def line_json(file_path):
-    openfile = open(file_path)
-    jsondata = json.load(openfile)
-    df = pd.DataFrame(jsondata)
-    openfile.close()
+in_data.loc[:, 'timestamp'] = pd.to_datetime(in_data.date, format = '%d.%m.%Y')
+
+agg_list = pd.DataFrame([], columns = in_data.columns)
+
+for dt in in_data.timestamp.unique():
+    dt_data = in_data[in_data.timestamp <= dt]
+    i_date = in_data[in_data.timestamp.isin([dt])].date.index[0]
+    dt_data.loc[:, 'date'] = in_data.iloc[i_date, 0]
     
-    geocode = df.loc['coordinates', 'geometry']
-    geo_lon = []
-    geo_lat = []
-    for geo_inst in geocode:
-        geo_lon.append(geo_inst[0]) 
-        geo_lat.append(geo_inst[1])
-    
-    return [geo_lon, geo_lat]
+    agg_list = pd.concat([agg_list, dt_data])
 
-
-def poly_json(file_path):
-    openfile = open(file_path)
-    jsondata = json.load(openfile)
-    df = pd.DataFrame(jsondata)
-    openfile.close()
-    
-    geocode = df.loc['coordinates', 'geometry'][0]
-    geo_lon = []
-    geo_lat = []
-    for geo_inst in geocode:
-        geo_lon.append(geo_inst[0]) 
-        geo_lat.append(geo_inst[1])
-    
-    return [geo_lon, geo_lat]
-
-bon1       = line_json(file_path = 'data//bon1.json')
-bon2       = line_json(file_path = 'data//bon2.json')
-camp_geo   = poly_json(file_path = 'data//camp.json')
-pyasino    = poly_json(file_path = 'data//pyasino.json')
-norilskaya = poly_json(file_path = 'data//norilskaya.json')
-ambarnaya  = poly_json(file_path = 'data//ambarn.json')
-ambar2     = poly_json(file_path = 'data//amb2.json')
-ambar3     = poly_json(file_path = 'data//amb3.json')
-ambar4     = poly_json(file_path = 'data//amb4.json')
-daldykan   = poly_json(file_path = 'data//daldykan.json')
-ambar5     = poly_json(file_path = 'data//amb5.json')
-
-markersize = []
-color_list = []
-for exc in input_data.excess:
-    if exc <= 1:
-        color_list.append('limegreen')
-        markersize.append(7)
-    elif exc >= 1.001 and exc <= 10:
-        color_list.append('yellow')
-        markersize.append(10)
-    elif exc >= 10.001 and exc <= 100:
-        color_list.append('darkorange')
-        markersize.append(12)
-    elif exc >= 100.001 and exc <= 1000:
-        color_list.append('fuchsia')
-        markersize.append(14)
-    elif exc >= 100.001 and exc <= 1000:
-        color_list.append('darkpurple')
-        markersize.append(14)
-    else:
-        color_list.append('red')
-        markersize.append(20)
-
+agg_list = agg_list[agg_list.date.isin(['29.05.2020']) == False]
+fict2 = [['29.05.2020', None, None, None, None, None, None, None, None, None]]
+agg_list = pd.concat([pd.DataFrame(fict2, columns = agg_list.columns), agg_list])
 
 access = 'pk.eyJ1Ijoia3Vrc2Vua29zcyIsImEiOiJjazE4NDlkZTQwMmtwM2NzenRmbm9rNjF2In0.j0d6QcToTviyQ0-KdzEIMA'
 
+fig_map = px.scatter_mapbox(data_frame = agg_list,
+                            lat = 'lat',
+                            lon = 'lon',
+                            animation_frame = 'date',
+                            color_continuous_scale = ['#00a8ff', 'red'],
+                            range_color = [0, 10],
+                            color = 'excess',
+                            size = np.full((1, len(agg_list.index)), 5)[0])
 
-# Карта  с отмеченными отборами воды
-figure = go.Figure(go.Scattermapbox(
-                lat = input_data.lat,
-                lon = input_data.lon,
-                mode = 'markers',
-                customdata = input_data,
-                hovertemplate = 'Результат отбора : %{customdata[5]:.2f} мг/дм3' +
-                                '<br>Превышение нормы в %{customdata[8]:.1f} раз</br>' +
-                                '<br>Дата отбора : %{customdata[0]}'
-                                '<br>Время начала отбора : %{customdata[1]}' +
-                                '<br>Время окончания отбора : %{customdata[2]}',
-                name = 'Отборы воды',
-                marker = go.scattermapbox.Marker(
-                         size = 10,
-                         color = color_list,
-                         opacity = 0.8
-                         ),
-                showlegend = False
-                
-    ))
+fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 1000
+fig_map.layout.sliders[0].pop('currentvalue')
+fig_map.layout.sliders[0].active = 1
 
-# Участок локализации разлива как полигон
-figure.add_trace(go.Scattermapbox(
-                lat=camp_geo[1],
-                lon=camp_geo[0],
-                mode='markers',
-                fill='toself',
-                name='Участок локализации разлива',
-                marker = go.scattermapbox.Marker(
-                         size = 1,
-                         color = 'rgba(127, 219, 255, 0.4)'
-                         ),
-                showlegend = False
-))
+fig_map.layout.sliders[0].pad.t = 50
+fig_map.layout.sliders[0].len = 0.90
+fig_map.layout.sliders[0].x   = 0.07
 
-# Река Норильская как полигон
-figure.add_trace(go.Scattermapbox(
-                lat = norilskaya[1],
-                lon = norilskaya[0],
-                mode = 'markers',
-                fill = 'toself',
-                name = 'Река Норильская',
-                marker = go.scattermapbox.Marker(
-                         size = 1,
-                         color = 'rgba(127, 219, 255, 0.4)'
-                         ),
-                showlegend = False)
-)
+fig_map.layout.sliders[0].currentvalue.visible = False
+fig_map.layout.sliders[0].bordercolor = '#00a8ff'
+fig_map.layout.sliders[0].borderwidth = 2
+fig_map.layout.sliders[0].ticklen     = 4
+fig_map.layout.sliders[0].bgcolor     = '#00a8ff'
+fig_map.layout.sliders[0].font = {'family' : 'Helvetica',
+                                  'size' : 18,
+                                  'color' : '#00a8ff'}
 
-# приток реки Амбарная как полигон
-figure.add_trace(go.Scattermapbox(
-                lat = ambar2[1],
-                lon = ambar2[0],
-                mode = 'markers',
-                fill = 'toself',
-                name = 'Приток реки Амбарная',
-                marker = go.scattermapbox.Marker(
-                         size = 1,
-                         color = 'rgba(127, 219, 255, 0.4)'
-                         ),
-                showlegend = False)
-)
+fig_map.layout.updatemenus[0].pad.r = 60
+fig_map.layout.updatemenus[0].pad.t = 40
 
-# Река Далдыкан как полигон
-figure.add_trace(go.Scattermapbox(
-                lat = daldykan[1],
-                lon = daldykan[0],
-                mode = 'markers',
-                fill = 'toself',
-                name = 'Река Далдыкан',
-                marker = go.scattermapbox.Marker(
-                         size = 1,
-                         color = 'rgba(127, 219, 255, 0.4)'
-                         ),
-                showlegend = False)
-)
+fig_map.layout.coloraxis.colorbar = dict(thickness = 10, 
+                                         ticklen = 3,
+                                         x = 0)
 
-# Река Амбарная как полигон
-figure.add_trace(go.Scattermapbox(
-                lat = ambar5[1],
-                lon = ambar5[0],
-                mode = 'markers',
-                fill = 'toself',
-                name = 'Река Амбарная',
-                marker = go.scattermapbox.Marker(
-                         size = 1,
-                         color = 'rgba(127, 219, 255, 0.4)'
-                         ),
-                showlegend = False)
-)
-
-figure.add_trace(go.Scattermapbox(
-                lat = ambar4[1],
-                lon = ambar4[0],
-                mode = 'markers',
-                fill = 'toself',
-                name = 'Приток реки Амбарная',
-                marker = go.scattermapbox.Marker(
-                         size = 1,
-                         color = 'rgba(127, 219, 255, 0.4)'
-                         ),
-                showlegend = False)
-)
-
-# река Амбарная как полигон
-figure.add_trace(go.Scattermapbox(
-                lat = ambar3[1],
-                lon = ambar3[0],
-                mode = 'markers',
-                fill = 'toself',
-                name = 'река Амбарная',
-                marker = go.scattermapbox.Marker(
-                         size = 1,
-                         color = 'rgba(127, 219, 255, 0.4)'
-                         ),
-                showlegend = False)
-)
-
-# Озеро Пясино как полигон
-figure.add_trace(go.Scattermapbox(
-                lat = pyasino[1],
-                lon = pyasino[0],
-                mode = 'markers',
-                fill = 'toself',
-                name = 'Озеро Пясино',
-                marker = go.scattermapbox.Marker(
-                         size = 1,
-                         color = 'rgba(127, 219, 255, 0.4)'
-                         ),
-                showlegend = False,
-                hoverinfo = 'skip'
-))
-
-# Река Амбарная как полигон
-figure.add_trace(go.Scattermapbox(
-                lat = ambarnaya[1],
-                lon = ambarnaya[0],
-                mode = 'markers',
-                fill = 'toself',
-                name = 'Река Амбарная',
-                marker = go.scattermapbox.Marker(
-                         size = 1,
-                         color = 'rgba(127, 219, 255, 0.4)'
-                         ),
-                showlegend = False,
-                hoverinfo = 'skip'
-))
-
-# Верхний бон
-figure.add_trace(go.Scattermapbox(
-                lat = bon1[1],
-                lon = bon1[0],
-                mode = 'markers+lines',
-                name = 'Верхний бон',
-                marker = go.scattermapbox.Marker(
-                         size = 12,
-                         color = 'white'
-                         ),
-                showlegend = False
-))
-
-# Нижний бон
-figure.add_trace(go.Scattermapbox(
-                lat = bon2[1],
-                lon = bon2[0],
-                mode = 'markers+lines',
-                name = 'Верхний бон',
-                marker = go.scattermapbox.Marker(
-                         size = 12,
-                         color = 'white',
-                         ),
-                showlegend = False,
-                hoverinfo = 'skip'
-))
-
-# Координаты Норильской ТЭЦ-3
-figure.add_trace(go.Scattermapbox(lat = [69.321521],
+fig_map.add_trace(go.Scattermapbox(lat = [69.321521],
                                   lon = [87.956233],
                                   name = 'Объекты',
                                   marker = go.scattermapbox.Marker(
                                                                    size = 12,
-                                                                   color = 'red',
+                                                                   color = 'blue',
                                                                    opacity = 0.8,
                                                                    symbol = 'triangle'
                                                                    ),
@@ -281,67 +116,51 @@ figure.add_trace(go.Scattermapbox(lat = [69.321521],
                                   showlegend = False
                                  ))
 
-figure.update_traces(textposition = 'bottom center',
-                     textfont = dict(family = "Verdana",
+fig_map.update_traces(textposition = 'bottom center',
+                     textfont = dict(family = "Helvetica",
                                      size = 16,
-                                     color = 'white'
+                                     color = 'black'
     ))
 
-figure.update_layout(
+fig_map.update_layout(
+                  margin = {'r' : 0,'t' : 0, 'l' : 0, 'b' : 0},
                   hovermode = 'closest',
                   hoverlabel = dict(
                                     bgcolor = 'black', 
-                                    font_size = 12, 
-                                    font_family = 'Verdana',
+                                    font_size = 10, 
+                                    font_family = 'Helvetica',
                                     font_color = 'white'
                                     ),
                   mapbox = dict(
                                 accesstoken = access,
                                 bearing = 0,
                                 center = go.layout.mapbox.Center(
-                                         lat = 69.666084,
-                                         lon = 87.791365
+                                         lat = 69.444882, 
+                                         lon = 87.915305
                                          ),
                   pitch = 0,
-                  zoom = 7,   
-                  style = 'satellite',    
-            
+                  zoom = 8,   
+                  style = 'light'   
     )
 )
 
-norilsk = html.Div(html.Div(children = [
-                                           html.H2('Система мониторинга экологической обстановки',
-                                                   style = {'color': 'darkgreen', 
-                                                            'fontSize': 25,
-                                                            'fontFamily' : 'Verdana',
-                                                            'paddingLeft' : 80,
-                                                            'paddingTop'  : 30
-                                                           }
-                                                  ),
-                      
-                                           html.Div(children = [ 
-                                                                dcc.Graph(
-                                                                          id = 'int_map', 
-                                                                          figure = figure,
-                                                                style = {'width' : '50%',
-                                                                         'height' : 700,
-                                                                         'paddingTop' : 0
+def generate_graph():
+    graph = html.Div(children = [html.Div(children = [ dcc.Graph(
+                                                                          id = 'int_map',
+                                                                          figure = fig_map,
+                                                                style = {'width' : '95%',
+                                                                         'height' : '100%',
+                                                                         'paddingTop' : 0,
+                                                                         'paddingLeft': 15
                                                                          }
                                                                 )]
-                                                   ),
-        
-                                           html.Div(children = [dash_table.DataTable(
-                                                                id = 'table',
-                                                                columns = [{'name': i, 'id': i} for i in data_table.columns],
-                                                                data = data_table.to_dict('records')
-                                           )
-                                                               ],
-                                                    style = {'width' : '50%'}
                                                    )
-]
-                              )
-)
+                                    ])
+    return graph
 
-
-
+norilsk = html.Div([
+    generate_frontpage("Мониторинг заборов"),
+    generate_graph(),
+    generate_transition()
+])
 

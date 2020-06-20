@@ -2,11 +2,11 @@
 # coding: utf-8
 
 import dash
-import os
-import base64
 import dash_core_components as dcc
 import dash_html_components as html
 from norilsk import norilsk
+from norilsk2 import norilsk2
+import base64
 
 app = dash.Dash(__name__)
 server = app.server
@@ -17,31 +17,12 @@ app.layout = html.Div([
     html.Div(id='page-content')
 ])
 
-@app.callback(dash.dependencies.Output('page-content', 'children'),
-              [dash.dependencies.Input('url', 'pathname')])
-def display_page(pathname):
-    if pathname == '/':
-        return start
-    elif pathname == '/norilsk':
-        return norilsk
-    else:
-        return start
-
-def get_menu():
-
-    menu = html.Div([
-            dcc.Link('Норильская ТЭЦ-3', href='/norilsk', id='link-1', className='tab first'),
-            dcc.Link('сайт РПН', href='https://rpn.gov.ru/', id='link-2', className='tab'),
-        ], className='screen-top')
-
-    return menu
-
-def generate_frontpage():
+def generate_frontpage(title):
     frontpage = html.Div(id='las-header', children=[
         html.A(
             html.Img(
                 id='las-logo',
-                src='data:image/jpg;base64,{}'.format(
+                src='data:image/png;base64,{}'.format(
                     base64.b64encode(
                         open('assets/rosprirodnadzor.png', 'rb').read()
                     ).decode()
@@ -49,11 +30,23 @@ def generate_frontpage():
         html.Div(
             id='las-header-text',
             children=[
-                html.H1("Аварии")]
+                html.H1(title)]
                 )
         ])
 
     return  frontpage
+
+@app.callback(dash.dependencies.Output('page-content', 'children'),
+              [dash.dependencies.Input('url', 'pathname')])
+def display_page(pathname):
+    if pathname == '/':
+        return start
+    elif pathname == '/norilsk':
+        return norilsk
+    elif pathname == '/norilsk2':
+        return norilsk2
+    else:
+        return start
 
 def table_link():
     table = html.Div([
@@ -77,7 +70,7 @@ def table_link():
             ]
             )], className='table-line-two'),
         html.Tr([
-            html.Td('!ДЕМО! Межрегиональное управление по   г. Москве и Колужской области'),
+            html.Td('!ДЕМО! Межрегиональное управление по   г. Москве и Калужской области'),
             html.Td('!ДЕМО! лесной пожар'),
             html.Td('!ДЕМО! 10 мая 2020 г'),
             html.Td(children=[
@@ -105,7 +98,7 @@ def table_link():
     return table
 
 start = html.Div([
-    generate_frontpage(),
+    generate_frontpage('Авария'),
     table_link()
 ])
 
