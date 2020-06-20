@@ -10,13 +10,25 @@ import pandas as pd
 import numpy  as np
 import base64
 
-def generate_transition():
+def table_link():
+    table = html.Div(
+       children=[
+                html.A(
+                    html.Img(
+                        id='back',
+                        src='data:image/JPG;base64,{}'.format(
+                            base64.b64encode(open('assets/back.JPG', 'rb').read()).decode())
+                    ), href='/'),
+                html.A(
+                    html.Img(
+                        id='forward',
+                        src='data:image/jpg;base64,{}'.format(
+                            base64.b64encode(open('assets/forward.jpg', 'rb').read()).decode())
+                    ), href='/norilsk2')]
+        )
 
-    transition = html.Div([
-            dcc.Link('Следующая страница -> Мониторинг секторов', href='/norilsk2', id='link-2', className='transition'),
-        ], className='generate_transition')
+    return table
 
-    return transition
 
 def generate_frontpage(title):
     frontpage = html.Div(id='las-header', children=[
@@ -161,6 +173,6 @@ def generate_graph():
 norilsk = html.Div([
     generate_frontpage("Мониторинг отбора проб"),
     generate_graph(),
-    generate_transition()
+    table_link()
 ])
 

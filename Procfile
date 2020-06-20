@@ -1,1 +1,1 @@
-web: gunicorn 1page:server
+web: gunicorn first_page:server
