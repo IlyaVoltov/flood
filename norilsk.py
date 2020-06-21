@@ -75,9 +75,14 @@ for dt in in_data.timestamp.unique():
     
     agg_list = pd.concat([agg_list, dt_data])
 
-agg_list = agg_list[agg_list.date.isin(['29.05.2020']) == False]
+eight = in_data[in_data.date.isin(['08.06.2020'])]
+eight_agg = agg_list[agg_list.date == '07.06.2020']
+eight_agg.loc[:, 'date'] = '08.06.2020'
+eight_full = pd.concat([eight_agg, eight])
+
 fict2 = [['29.05.2020', None, None, None, None, None, None, None, None, None]]
 agg_list = pd.concat([pd.DataFrame(fict2, columns = agg_list.columns), agg_list])
+agg_list = pd.concat([agg_list, eight_full])
 
 access = 'pk.eyJ1Ijoia3Vrc2Vua29zcyIsImEiOiJjazE4NDlkZTQwMmtwM2NzenRmbm9rNjF2In0.j0d6QcToTviyQ0-KdzEIMA'
 
@@ -92,7 +97,7 @@ fig_map = px.scatter_mapbox(data_frame = agg_list,
 
 fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 1000
 fig_map.layout.sliders[0].pop('currentvalue')
-fig_map.layout.sliders[0].active = 1
+fig_map.layout.sliders[0].active = 0
 
 fig_map.layout.sliders[0].pad.t = 50
 fig_map.layout.sliders[0].len = 0.90

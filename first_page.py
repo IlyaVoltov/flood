@@ -50,11 +50,10 @@ def display_page(pathname):
     else:
         return start
 
-
 def create_barchart(poly_group):
     return {
         'data': [dict(
-                    x=poly_group.date,
+                    x=poly_group.date, type='bar',
                     y=poly_group.avg_excess,
                     marker_color='#00a8ff',
                     name='Показатели',

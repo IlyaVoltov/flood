@@ -170,25 +170,8 @@ def generate_frontpage(title):
     return frontpage
 
 
+
 norilsk2 = html.Div([
-        html.Div([
-            dcc.Graph(
-                        id='map',
-                        figure=cm,
-                        hoverData={
-                          'points': [
-                              {'location': '8c95756206039444095efcf05f77c9dc'}
-                          ]}
-            )
-        ]),
-
-        html.Div([
-            dcc.Graph(id='bar_chart')
-        ]),
-    ])
-
-
-# norilsk2 = html.Div([
-#   generate_frontpage("Мониторинг секторов"),
-#    generate_graph()
-# ])
+    generate_frontpage("Мониторинг секторов"),
+    generate_graph()
+])
