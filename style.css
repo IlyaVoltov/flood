@@ -2,8 +2,8 @@
   display: block;
   padding: 0px;
   margin: 0px;
-  width: 80%;
-  height: 110px;
+  width: 75%;
+  height: 100px;
   position: center;
 }
 #las-header {
@@ -16,12 +16,13 @@
 }
 #las-header-text h1 {
   background-color: white;   
-  font-size: 30pt !important;
+  font-size: 18pt !important;
   font-weight: bolder;
   font-family: Helvetica;
-  padding: 15px;
+  padding: 17px;
   text-align: center;
   -webkit-font-smoothing: antialiased;
+  text-shadow: 2px 2px 4px grey; 
 }
 #alarm-logo {
   height:84px; 
@@ -47,5 +48,23 @@ Th {
 Td {
   background-color: rgb(237,237,237);
 }
-
-
+#back, #forward {
+  width: 45px;
+  height: 40px;
+  padding: 8px;
+  border: 1px solid white;
+  border-collapse: collapse;
+}
+#page {
+  display: flex;
+}
+#map, #bar_chart {
+  width: 49%;
+}
+# #bar_chart {
+  padding: 8px;
+}
+.table-line-two {
+  font-weight: bold;  
+  color: red;  
+}

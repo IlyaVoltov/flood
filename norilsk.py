@@ -10,13 +10,25 @@ import pandas as pd
 import numpy  as np
 import base64
 
-def generate_transition():
+def table_link():
+    table = html.Div(
+       children=[
+                html.A(
+                    html.Img(
+                        id='back',
+                        src='data:image/JPG;base64,{}'.format(
+                            base64.b64encode(open('assets/back.JPG', 'rb').read()).decode())
+                    ), href='/'),
+                html.A(
+                    html.Img(
+                        id='forward',
+                        src='data:image/jpg;base64,{}'.format(
+                            base64.b64encode(open('assets/forward.jpg', 'rb').read()).decode())
+                    ), href='/norilsk2')]
+        )
 
-    transition = html.Div([
-            dcc.Link('Следующая страница -> Мониторинг секторов', href='/norilsk2', id='link-2', className='transition'),
-        ], className='generate_transition')
+    return table
 
-    return transition
 
 def generate_frontpage(title):
     frontpage = html.Div(id='las-header', children=[
@@ -64,8 +76,15 @@ for dt in in_data.timestamp.unique():
     agg_list = pd.concat([agg_list, dt_data])
 
 agg_list = agg_list[agg_list.date.isin(['29.05.2020']) == False]
+eight = in_data[in_data.date.isin(['08.06.2020'])]
+eight_agg = agg_list[agg_list.date == '07.06.2020']
+eight_agg.loc[:, 'date'] = '08.06.2020'
+eight_full = pd.concat([eight_agg, eight])
+
 fict2 = [['29.05.2020', None, None, None, None, None, None, None, None, None]]
 agg_list = pd.concat([pd.DataFrame(fict2, columns = agg_list.columns), agg_list])
+agg_list = pd.concat([agg_list, eight_full])
+agg_list.loc[:, 'excess'] = agg_list.loc[:, 'excess'].round(1)
 
 access = 'pk.eyJ1Ijoia3Vrc2Vua29zcyIsImEiOiJjazE4NDlkZTQwMmtwM2NzenRmbm9rNjF2In0.j0d6QcToTviyQ0-KdzEIMA'
 
@@ -80,7 +99,7 @@ fig_map = px.scatter_mapbox(data_frame = agg_list,
 
 fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 1000
 fig_map.layout.sliders[0].pop('currentvalue')
-fig_map.layout.sliders[0].active = 1
+fig_map.layout.sliders[0].active = 0
 
 fig_map.layout.sliders[0].pad.t = 50
 fig_map.layout.sliders[0].len = 0.90
@@ -144,6 +163,9 @@ fig_map.update_layout(
     )
 )
 
+for i, date in pd.Series(agg_list.date.unique()).iteritems():
+    fig_map.frames[i].data[0].hovertemplate = 'Дата отбора - {}'.format(date) + '<br>Кратность превышения - %{marker.color}</br>'
+
 def generate_graph():
     graph = html.Div(children = [html.Div(children = [ dcc.Graph(
                                                                           id = 'int_map',
@@ -159,8 +181,7 @@ def generate_graph():
     return graph
 
 norilsk = html.Div([
-    generate_frontpage("Мониторинг заборов"),
+    generate_frontpage("Мониторинг отбора проб"),
     generate_graph(),
-    generate_transition()
+    table_link()
 ])
-
