@@ -31,6 +31,19 @@ df = pd.DataFrame(jsondata)
 openfile.close()
 
 
+def table_link():
+    table = html.Div(
+       children=[
+                html.A(
+                    html.Img(
+                        id='back',
+                        src='data:image/JPG;base64,{}'.format(
+                            base64.b64encode(open('assets/back.JPG', 'rb').read()).decode())
+                    ), href='/norilsk')
+])
+
+    return table
+
 def poly_geo(file_path):
     openfile = open(file_path)
     jsondata = json.load(openfile)
@@ -102,50 +115,67 @@ for day in res_df.date.unique():
 
         df_poly.append([day, poly, avg_excess])
 
-res = pd.DataFrame(df_poly, columns=['date', 'polygon_id', 'avg_excess']).set_index('polygon_id')
+res = pd.DataFrame(df_poly, columns=['date', 'polygon_id', 'avg_excess'])
 
 p_list = []
 
-for p in res.index.unique():
+for p in res.polygon_id.unique():
     poly_group = res.groupby('polygon_id').get_group(p)
     p_list.append(poly_group.iloc[-1, :])
 
 df_map = pd.DataFrame(p_list)
 
-cm = px.choropleth_mapbox(data_frame=df_map,
-                          geojson=jsondata,
-                          locations=df_map.index,
-                          color=df_map.avg_excess,
-                          range_color=[0, 5],
-                          color_continuous_scale=['#00a8ff', 'red'])
+pmap = go.Figure(go.Choroplethmapbox(geojson = jsondata,
+                                     locations = df_map.polygon_id,
+                                     z = df_map.avg_excess,
+                                     zmin = 0,
+                                     zmax = 5,
+                                     colorscale = ['#00a8ff', 'red'],
+                                     colorbar = dict(thickness = 10, 
+                                                     ticklen = 3,
+                                                     x = 0),
+                                     customdata = df_map,
+                                     hovertemplate = 'Превышение нормы в %{customdata[2]:.1f} раз',
+                                     name = 'Отборы воды',
+                                     marker_line_width = 0))
 
-cm.layout.coloraxis.colorbar = dict(thickness=10,
-                                    ticklen=3,
-                                    x=0)
-
-cm.update_layout(mapbox_style='light',
-                 mapbox_accesstoken=access,
-                 mapbox_zoom=8,
-                 mapbox_center={'lat': 69.444882, 'lon': 87.915305})
-
-cm.update_layout(margin={"r": 15, "t": 10, "l": 0, "b": 0})
+pmap.update_layout(
+                  margin = {'r' : 0,'t' : 0, 'l' : 0, 'b' : 0},
+                  hovermode = 'closest',
+                  hoverlabel = dict(
+                                    bgcolor = 'black', 
+                                    font_size = 10, 
+                                    font_family = 'Helvetica',
+                                    font_color = 'white'
+                                    ),
+                  mapbox = dict(
+                                accesstoken = access,
+                                bearing = 0,
+                                center = go.layout.mapbox.Center(
+                                         lat = 69.444882, 
+                                         lon = 87.915305
+                                         ),
+                  pitch = 0,
+                  zoom = 8,   
+                  style = 'light'   
+    )
+)
 
 def generate_graph():
     graph = html.Div([
-        html.Div([
+        html.Div(id='page',children=[
             dcc.Graph(
                         id='map',
-                        figure=cm,
+                        figure=pmap,
                         hoverData={
                           'points': [
                               {'location': '8c95756206039444095efcf05f77c9dc'}
                           ]}
-            )
-        ]),
-
-        html.Div([
-            dcc.Graph(id='bar_chart')
-        ]),
+            ),
+            html.Div([
+                dcc.Graph(id='bar_chart')
+        ])
+    ])
     ])
 
     return graph
@@ -173,5 +203,6 @@ def generate_frontpage(title):
 
 norilsk2 = html.Div([
     generate_frontpage("Мониторинг секторов"),
-    generate_graph()
+    generate_graph(),
+    table_link()
 ])
