@@ -60,7 +60,7 @@ def poly_geo(file_path):
         if f_type == 'Polygon':
             geocode = comm_df.loc['coordinates', 'geometry'][0]
         else:
-            geocode = comm_df.loc['coordinates', 'geometry']
+            continue
 
         geo_lon = []
         geo_lat = []
@@ -74,7 +74,6 @@ def poly_geo(file_path):
         geo_array.append([poly_id, geo_lon, geo_lat, geo_cor])
 
     return geo_array
-
 
 result_df = pd.DataFrame(poly_geo(file), columns=['poly_id', 'lat', 'lon', 'coord']).set_index('poly_id')
 
@@ -138,6 +137,24 @@ pmap = go.Figure(go.Choroplethmapbox(geojson = jsondata,
                                      hovertemplate = 'Превышение нормы в %{customdata[2]:.1f} раз',
                                      name = 'Отборы воды',
                                      marker_line_width = 0))
+
+pmap.add_trace(go.Scattermapbox(lat = [69.321521],
+                                  lon = [87.956233],
+                                  name = 'Объекты',
+                                  marker = go.scattermapbox.Marker(
+                                                                   size = 12,
+                                                                   color = 'blue',
+                                                                   opacity = 0.8,
+                                                                   symbol = 'triangle'
+                                                                   ),
+                                  text = 'Норильская ТЭЦ-3',
+                                  textposition = 'bottom center',
+                                  textfont = dict(family = "Helvetica",
+                                                  size = 14,
+                                                  color = 'black'),
+                                  mode = 'markers+text',
+                                  showlegend = False
+                                 ))
 
 pmap.update_layout(
                   margin = {'r' : 0,'t' : 0, 'l' : 0, 'b' : 0},

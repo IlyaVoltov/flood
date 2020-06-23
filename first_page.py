@@ -53,16 +53,27 @@ def display_page(pathname):
 def create_barchart(poly_group):
     return {
         'data': [dict(
-                    x=poly_group.date, type='bar',
-                    y=poly_group.avg_excess,
-                    marker_color='#00a8ff',
-                    name='Показатели',
-                    showlegend=False)],
-               'layout': {
-                   'yaxis_type': 'log',
-                   'xaxis_title': 'Дата отбора воды',
-                   'yaxis_title': 'Кратность превышения нормы на участке'}
-            }
+                    x = poly_group.date,
+                    y = poly_group.avg_excess,
+                    type = 'bar',
+                    marker = dict(color = '#00a8ff'),
+                    name = 'Показатели',
+                    text = poly_group.avg_excess.round(1),
+                    textposition = 'outside',
+                    showlegend = False),
+                dict(
+                    x = poly_group.date,
+                    y = poly_group.avg_excess,
+                    type = 'scatter',
+                    marker = dict(color = 'red'),
+                    name = 'Тренд',
+                    showlegend = False)],
+        
+        'layout': dict(
+                   yaxis = dict(type = 'log', 
+                                title = 'Кратность превышения нормы на участке'),
+                   title = 'Динамика развития аварии',
+                   xaxis = dict(title = 'Дата отбора воды'))}
 
 
 @app.callback(
@@ -133,4 +144,3 @@ start = html.Div([
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
