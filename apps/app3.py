@@ -11,7 +11,9 @@ import pandas as pd
 import numpy as np
 from shapely.geometry import Polygon, Point
 import json
+import frontpage
 
+from app import app
 
 file = 'data//features.json'
 
@@ -197,29 +199,44 @@ def generate_graph():
 
     return graph
 
-def generate_frontpage(title):
-    frontpage = html.Div(id='las-header', children=[
-        html.A(
-            html.Img(
-                id='las-logo',
-                src='data:image/png;base64,{}'.format(
-                    base64.b64encode(
-                        open('assets/rosprirodnadzor.png', 'rb').read()
-                    ).decode()
-                )), href='https://rpn.gov.ru/'),
-        html.Div(
-            id='las-header-text',
-            children=[
-                html.H1(title)]
-                )
-        ])
 
-    return frontpage
+def create_barchart(poly_group):
+    return {
+        'data': [dict(
+                    x = poly_group.date,
+                    y = poly_group.avg_excess,
+                    type = 'bar',
+                    marker = dict(color = '#00a8ff'),
+                    name = 'Показатели',
+                    text = poly_group.avg_excess.round(1),
+                    textposition = 'outside',
+                    showlegend = False),
+                dict(
+                    x = poly_group.date,
+                    y = poly_group.avg_excess,
+                    type = 'scatter',
+                    marker = dict(color = 'red'),
+                    name = 'Тренд',
+                    showlegend = False)],
+        
+        'layout': dict(
+                   yaxis = dict(type = 'log', 
+                                title = 'Кратность превышения нормы на участке'),
+                   title = 'Динамика развития аварии',
+                   xaxis = dict(title = 'Дата отбора воды'))}
 
 
+@app.callback(
+    dash.dependencies.Output('bar_chart', 'figure'),
+    [dash.dependencies.Input('map', 'hoverData')])
+def create_plot(hover_data):
+    polygon_id = hover_data['points'][0]['location']
+    polygon_group = res.groupby('polygon_id').get_group(polygon_id)
 
-norilsk2 = html.Div([
-    generate_frontpage("Мониторинг секторов"),
+    return create_barchart(polygon_group)
+
+layout = html.Div([
+    frontpage.generate_frontpage("Динамика ликвидации аварии"),
     generate_graph(),
     table_link()
 ])
