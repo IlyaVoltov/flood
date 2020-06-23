@@ -1,0 +1,64 @@
+#las-logo{
+  display: block;
+  padding: 0px;
+  margin: 0px;
+  width: 67%;
+  height: 88px;
+  position: center;
+}
+#las-header {
+  background-color: rgb(74,159,136);    
+  position: center;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+#las-header-text h1 {
+  background-color: white;   
+  font-size: 18pt !important;
+  font-weight: bolder;
+  font-family: Helvetica;
+  padding: 17px;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+  color: rgb(115,115,115);
+}
+#alarm-logo {
+  height:84px; 
+  width:84px;
+}
+.table {
+  border-collapse: collapse;
+  border: 1px solid white;
+  width: 100%;
+}
+Th, Td {
+  border: 1px solid white;
+  width: 20%;
+  padding: 10px 15px;
+  text-align: center; 
+  vertical-align: middle; 
+  font-family: Helvetica;
+}
+Th {
+  background-color: rgb(168,168,168);
+  color: white;
+}
+Td {
+  background-color: rgb(237,237,237);
+}
+#back, #forward {
+  width: 45px;
+  height: 40px;
+  padding: 8px;
+  border: 1px solid white;
+  border-collapse: collapse;
+}
+.table-line-two {
+  font-weight: bold;  
+  color: red;  
+}
+#page {
+  display: flex;
+  width: 50%;
+}
