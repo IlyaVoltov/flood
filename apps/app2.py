@@ -9,6 +9,7 @@ import plotly.express as px
 import pandas as pd
 import numpy  as np
 import base64
+import frontpage
 
 def table_link():
     table = html.Div(
@@ -29,29 +30,8 @@ def table_link():
 
     return table
 
-
-def generate_frontpage(title):
-    frontpage = html.Div(id='las-header', children=[
-        html.A(
-            html.Img(
-                id='las-logo',
-                src='data:image/png;base64,{}'.format(
-                    base64.b64encode(
-                        open('assets/rosprirodnadzor.png', 'rb').read()
-                    ).decode()
-                )), href='https://rpn.gov.ru/'),
-        html.Div(
-            id='las-header-text',
-            children=[
-                html.H1(title)]
-                )
-        ])
-
-    return  frontpage
-
 first_june = pd.read_csv('data//Разлив - Лист1.csv',
-                         usecols = ['date', 'time_start', 'time_end',
-                                    'lon', 'lat', 'val', 'standard', 'cluster']) 
+                usecols = ['date', 'time_start', 'time_end','lon', 'lat', 'val', 'standard', 'cluster']) 
 
 input_data = first_june.replace(',', '.', regex = True)
 input_data.iloc[:, 3:] = input_data.iloc[:, 3:].astype('float64')
@@ -97,7 +77,7 @@ fig_map = px.scatter_mapbox(data_frame = agg_list,
                             color = 'excess',
                             size = np.full((1, len(agg_list.index)), 5)[0])
 
-fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 1000
+fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 10000
 fig_map.layout.sliders[0].pop('currentvalue')
 fig_map.layout.sliders[0].active = 0
 
@@ -166,6 +146,7 @@ fig_map.update_layout(
 for i, date in pd.Series(agg_list.date.unique()).iteritems():
     fig_map.frames[i].data[0].hovertemplate = 'Дата отбора - {}'.format(date) + '<br>Кратность превышения - %{marker.color}</br>'
 
+
 def generate_graph():
     graph = html.Div(children = [html.Div(children = [ dcc.Graph(
                                                                           id = 'int_map',
@@ -180,8 +161,8 @@ def generate_graph():
                                     ])
     return graph
 
-norilsk = html.Div([
-    generate_frontpage("Мониторинг отбора проб"),
+layout = html.Div([
+    frontpage.generate_frontpage("Мониторинг отбора проб"),
     generate_graph(),
     table_link()
 ])
