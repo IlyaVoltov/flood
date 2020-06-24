@@ -176,7 +176,7 @@ pmap.update_layout(
                                          ),
                   pitch = 0,
                   zoom = 8,   
-                  style = 'light'   
+                  style = 'satellite'   
     )
 )
 
