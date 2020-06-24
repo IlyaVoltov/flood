@@ -14,6 +14,7 @@
 import dash_table
 import frontpage
 import pandas as pd
+import navigation_table
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
@@ -81,7 +82,8 @@ def generate_table():
 
 layout = html.Div([
     frontpage.generate_frontpage("Данные по отбору проб"),
-    generate_table()
+    generate_table(),
+    navigation_table.table_link('/norilsk2', '/')
 ])
 
 

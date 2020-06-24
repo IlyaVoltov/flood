@@ -17,25 +17,8 @@ import pandas as pd
 import numpy  as np
 import base64
 import frontpage
+import navigation_table
 
-def table_link():
-    table = html.Div(
-       children=[
-                html.A(
-                    html.Img(
-                        id='back',
-                        src='data:image/JPG;base64,{}'.format(
-                            base64.b64encode(open('assets/back.JPG', 'rb').read()).decode())
-                    ), href='/'),
-                html.A(
-                    html.Img(
-                        id='forward',
-                        src='data:image/jpg;base64,{}'.format(
-                            base64.b64encode(open('assets/forward.jpg', 'rb').read()).decode())
-                    ), href='/norilsk2')]
-        )
-
-    return table
 
 first_june = pd.read_csv('data//Разлив - Лист1.csv',
                 usecols = ['date', 'time_start', 'time_end','lon', 'lat', 'val', 'standard', 'cluster']) 
@@ -171,5 +154,5 @@ def generate_graph():
 layout = html.Div([
     frontpage.generate_frontpage("Мониторинг отбора проб"),
     generate_graph(),
-    table_link()
+    navigation_table.table_link('/', '/norilsk2')
 ])

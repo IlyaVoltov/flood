@@ -11,7 +11,6 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import base64
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
@@ -19,6 +18,7 @@ import numpy as np
 from shapely.geometry import Polygon, Point
 import json
 import frontpage
+import navigation_table
 
 from app import app
 
@@ -38,28 +38,6 @@ openfile = open(file)
 jsondata = json.load(openfile)
 df = pd.DataFrame(jsondata)
 openfile.close()
-
-
-def table_link():
-    table = html.Div(
-       children=[
-                html.A(
-                    html.Img(
-                        id='back',
-                        src='data:image/JPG;base64,{}'.format(
-                            base64.b64encode(open('assets/back.JPG', 'rb').read()).decode())
-                    ), href='/norilsk'),
-                html.A(
-                    html.Img(
-                        id='forward',
-                        src='data:image/jpg;base64,{}'.format(
-                            base64.b64encode(open('assets/forward.jpg', 'rb').read()).decode())
-                    ), href='/norilsk/table')]
-        )
-
-    return table
-
-    return table
 
 def poly_geo(file_path):
     openfile = open(file_path)
@@ -254,5 +232,5 @@ def create_plot(hover_data):
 layout = html.Div([
     frontpage.generate_frontpage("Динамика ликвидации аварии"),
     generate_graph(),
-    table_link()
+    navigation_table.table_link('/norilsk', '/norilsk/table')
 ])
