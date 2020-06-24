@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+"""
+    Вторая страница:
+        - "Мониторинг отбора проб";
+        - Карта с точками отборов проб;
+        - Слайдер с анимацией по дням.
+"""
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html

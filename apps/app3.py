@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+"""
+    Третья страница:
+        - "Динамика ликвидации аварии";
+        - карта с полигонами проб;
+        - график с кратностью превышения по дням в этом полигоне.
+"""
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -41,8 +48,16 @@ def table_link():
                         id='back',
                         src='data:image/JPG;base64,{}'.format(
                             base64.b64encode(open('assets/back.JPG', 'rb').read()).decode())
-                    ), href='/norilsk')
-])
+                    ), href='/norilsk'),
+                html.A(
+                    html.Img(
+                        id='forward',
+                        src='data:image/jpg;base64,{}'.format(
+                            base64.b64encode(open('assets/forward.jpg', 'rb').read()).decode())
+                    ), href='/norilsk/table')]
+        )
+
+    return table
 
     return table
 
