@@ -21,11 +21,14 @@ import navigation_table
 
 
 first_june = pd.read_csv('data//Разлив - Лист1.csv',
-                usecols = ['date', 'time_start', 'time_end','lon', 'lat', 'val', 'standard', 'cluster']) 
+                usecols = ['date', 'time_start', 'time_end','lon', 'lat', 'val', 'standard', 'sampling_site']) 
 
 input_data = first_june.replace(',', '.', regex = True)
-input_data.iloc[:, 3:] = input_data.iloc[:, 3:].astype('float64')
-input_data['excess'] = input_data.val / input_data.standard 
+input_data['lon'] = input_data['lon'].astype('float64')
+input_data['lat'] = input_data['lat'].astype('float64')
+input_data['val'] = input_data['val'].astype('float64')
+input_data['standard'] = input_data['standard'].astype('float64')
+input_data['excess'] = round(input_data.val / input_data.standard, 1)
 
 fict = [['29.05.2020', None, None, None, None, None, None, None, None],
         ['30.05.2020', None, None, None, None, None, None, None, None],
@@ -54,7 +57,6 @@ eight_full = pd.concat([eight_agg, eight])
 fict2 = [['29.05.2020', None, None, None, None, None, None, None, None, None]]
 agg_list = pd.concat([pd.DataFrame(fict2, columns = agg_list.columns), agg_list])
 agg_list = pd.concat([agg_list, eight_full])
-agg_list.loc[:, 'excess'] = agg_list.loc[:, 'excess'].round(1)
 
 access = 'pk.eyJ1Ijoia3Vrc2Vua29zcyIsImEiOiJjazE4NDlkZTQwMmtwM2NzenRmbm9rNjF2In0.j0d6QcToTviyQ0-KdzEIMA'
 
@@ -62,12 +64,12 @@ fig_map = px.scatter_mapbox(data_frame = agg_list,
                             lat = 'lat',
                             lon = 'lon',
                             animation_frame = 'date',
-                            color_continuous_scale = ['#00a8ff', 'red'],
-                            range_color = [0, 10],
+                            color_continuous_scale = ['#00a8ff', '#7A1012'],
+                            range_color = [0, 100],
                             color = 'excess',
                             size = np.full((1, len(agg_list.index)), 5)[0])
 
-fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 10000
+fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 5000
 fig_map.layout.sliders[0].pop('currentvalue')
 fig_map.layout.sliders[0].active = 0
 
@@ -134,7 +136,9 @@ fig_map.update_layout(
 )
 
 for i, date in pd.Series(agg_list.date.unique()).iteritems():
-    fig_map.frames[i].data[0].hovertemplate = 'Дата отбора - {}'.format(date) + '<br>Кратность превышения - %{marker.color}</br>'
+    date_stamp = 'Дата отбора - {}'.format(date)
+    excess = '<br>Кратность превышения - %{marker.color}</br>'
+    fig_map.frames[i].data[0].hovertemplate = date_stamp + excess
 
 
 def generate_graph():
