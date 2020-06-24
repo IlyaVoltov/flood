@@ -93,7 +93,3 @@ Td {
   font-family: Arial, Helvetica, sans-serif;  
   color: red;  
 }
-#page {
-  display: flex;
-  width: 50%;
-}
