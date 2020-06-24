@@ -34,7 +34,7 @@ column_names = [{"name": "Дата", "id": "date"},
                 {"name": "Место отбора проб", "id": "sampling_site"}
                 ]
 
-PAGE_SIZE = 10
+PAGE_SIZE = 7
 
 def generate_table():
     measure_table = dash_table.DataTable(
@@ -43,21 +43,37 @@ def generate_table():
         page_current=0,
         page_size=PAGE_SIZE,
         page_action='custom',
-        style_cell={
+        style_data={
             'textAlign': 'left',
             'whiteSpace': 'normal',
-            'height': 'auto',
-            'lineHeight': '15px'
         },
+        css=[{
+            'selector': '.dash-spreadsheet td div',
+            'rule': '''
+                line-height: 15px;
+                max-height: 45px; min-height: 45px; height: 45px;
+                display: block;
+                overflow-y: hidden;
+            '''
+        }],
+        tooltip_data=[
+            {
+                column: {'value': str(value), 'type': 'markdown'}
+                for column, value in row.items()
+            } for row in df.to_dict('rows')
+        ],
+        tooltip_duration=None,
         style_header={
             'backgroundColor': 'rgb(108, 117, 111)',
             'fontWeight': 'bold'
         },
         style_cell_conditional=[
-            {'if': {'column_id': 'date'},
-            'width': '15%'},
-            {'if': {'column_id': 'excess'},
-            'width': '20%'},
+            {
+                'if': {
+                    'filter_query': '{excess} > 100',
+                },
+                'backgroundColor': 'rgb(221, 127, 95)'
+            }
         ]
     )
 

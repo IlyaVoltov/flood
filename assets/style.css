@@ -3,7 +3,7 @@
   margin: 0 auto;
   position: relative;
   width: 100%;
-  height: 150px;
+  height: 130px;
 }
 #logo {
   display: flex;
@@ -45,16 +45,12 @@
   height: 90px;
 }
 #las-header-text { 
-<<<<<<< HEAD
-=======
-  font-size: 10pt;
->>>>>>> 6f2fa07dd14c6ac93e563758069903e92f649a13
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
   color: rgb(115,115,115);
 }
 #system-name {
-  text-align: left;
+  text-align: right;
   font-weight: bolder;
   font-size: 18px;
   font-family: Arial, Helvetica, sans-serif;
