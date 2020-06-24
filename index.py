@@ -8,7 +8,7 @@ from dash.dependencies import Input, Output
 from app import app
 from apps import app1, app2, app3, app4
 
-
+server = app.server
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Div(id='page-content')
