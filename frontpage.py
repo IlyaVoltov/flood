@@ -33,7 +33,7 @@ def generate_frontpage(title):
                 html.Div(
                     id='las-header-text',
                     children=[
-                        html.H1(title)]
+                        html.H2(title)]
                 )
             ])
         )

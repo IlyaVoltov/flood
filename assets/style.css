@@ -41,11 +41,14 @@
 }
 #logo-image{
   -webkit-text-size-adjust: none;
-  width: 70px;
-  height: 70px;
+  width: 90px;
+  height: 90px;
 }
 #las-header-text { 
+<<<<<<< HEAD
+=======
   font-size: 10pt;
+>>>>>>> 6f2fa07dd14c6ac93e563758069903e92f649a13
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
   color: rgb(115,115,115);
@@ -55,7 +58,7 @@
   font-weight: bolder;
   font-size: 18px;
   font-family: Arial, Helvetica, sans-serif;
-  color: rgb(29, 61, 34);
+  color: rgb(255, 255, 255);
 }
 #alarm-logo {
   height:84px; 
