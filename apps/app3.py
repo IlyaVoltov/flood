@@ -115,6 +115,7 @@ for i, point_item in point_array.iteritems():
             p_cluster.append([i, j])
 
 cluster_df = pd.DataFrame(p_cluster, columns=['point_id', 'polygon_id']).set_index('point_id')
+cluster_df = cluster_df.loc[~cluster_df.index.duplicated()]
 
 res_df = pd.concat([input_data, cluster_df], axis=1)
 
