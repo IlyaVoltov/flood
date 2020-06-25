@@ -9,15 +9,16 @@
 """
 
 import dash
+import time
+import json
+import pandas as pd
+import numpy as np
+import plotly.express as px
+from datetime import datetime as dt
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objects as go
-import plotly.express as px
-import pandas as pd
-import numpy as np
 from shapely.geometry import Polygon, Point
-import json
-from datetime import datetime as dt
 from dash.dependencies import Input, Output
 
 import frontpage
@@ -188,6 +189,33 @@ cm.update_layout(mapbox_style = 'satellite',
 
 cm.update_layout(margin = {"r" : 15, "t" : 10, "l" : 0, "b" : 0})
 
+'''
+    Проблема с поддержкой типа datetime для dcc.Slider и её решение:
+    https://stackoverflow.com/questions/49371248/plotly-dash-has-unknown-issue-and-creates-error-loading-dependencies-by-using/51003812#51003812
+'''
+
+test['date'] = pd.to_datetime(test['date'], dayfirst=True)
+test['date_only'] = test['date'].dt.date.astype('datetime64[ns]')
+
+def unixTimeMillis(dt):
+    ''' Convert datetime to unix timestamp '''
+    return int(time.mktime(dt.timetuple()))
+
+def unixToDatetime(unix):
+    ''' Convert unix timestamp to datetime. '''
+    timestamp = pd.to_datetime(unix, unit='s')
+    return timestamp
+
+def getMarks():
+    ''' Returns the marks for labeling. 
+        Every Nth value will be used.
+    '''
+    result = {}
+    for date in test['date_only'].unique():
+        date = pd.to_datetime(date)
+        result[unixTimeMillis(date)] = date.date()
+
+    return result
 
 def generate_graph():
     graph = html.Div([
@@ -200,6 +228,13 @@ def generate_graph():
                             'points': [
                                 {'location': '8c95756206039444095efcf05f77c9dc'}]})
         ]),
+        dcc.Slider(
+                id='year-slider',
+                min = unixTimeMillis(test['date_only'].min()),
+                max = unixTimeMillis(test['date_only'].max()),
+                value = unixTimeMillis(test['date_only'].min()),
+                marks=getMarks()
+            ),
         html.Div([
             dcc.Graph(id = 'bar_chart')
         ]),
@@ -245,11 +280,14 @@ def get_weather_archive(filename, picked_date):
         filename, 
         usecols=['dt_iso', 'temp', 'wind_speed', 'wind_deg', 'rain_3h', 'snow_3h'])
     df['dt_iso'] = pd.to_datetime(df['dt_iso'])
-    df['date'] = pd.to_datetime(df['dt_iso'].apply(lambda x: x.date()))
+    df['date'] = pd.to_datetime(df['dt_iso']).apply(lambda x: x.date())
     df = df.set_index('dt_iso')
     df = df.fillna(0)
+    dff = df[df['date'] == picked_date]
 
-    return df[df['date'] == picked_date]
+    print("Выбран день - ", picked_date)
+
+    return dff
 
 def get_wind_direction(wind_degrees):
     if wind_degrees > 23 and wind_degrees <= 67:
@@ -274,14 +312,6 @@ def get_wind_direction(wind_degrees):
 
 def get_weather_layout():
     layout = html.Div([
-            html.Div([
-                dcc.DatePickerSingle(
-                    id='my-date-picker-single',
-                    min_date_allowed=dt(2020, 5, 29),
-                    max_date_allowed=dt(2020, 6, 21),
-                    date=dt(2020, 5, 29)
-                )
-            ]),
             html.Table([
                 html.Tr([
                     html.Th('Температура воздуха, °C'),
@@ -309,16 +339,22 @@ def get_weather_layout():
         Output('wind-icon', 'src')
     ],
     [
-        Input('my-date-picker-single', 'date')
+        Input('year-slider', 'value')
     ]
 )
-def get_weather_data(date):
+def get_weather_data(date_slider):
+    date = unixToDatetime(date_slider)
     df = get_weather_archive('data//weather_archive.csv', date)
-    icon_path = get_wind_direction(df['wind_deg'].values[0])
-    wind_speed = df['wind_speed'].values[0]
-    temperature = df['temp'].values[0]
-    rainfall = df['rain_3h'].values[0]
-    snowfall = df['snow_3h'].values[0]
+    if df.shape[0] > 0:
+        icon_path = get_wind_direction(df['wind_deg'].values[0])
+        wind_speed = df['wind_speed'].values[0]
+        temperature = df['temp'].values[0]
+        rainfall = df['rain_3h'].values[0]
+    else:
+        icon_path = get_wind_direction(0)
+        wind_speed = 0
+        temperature = 0
+        rainfall = 0
     return ([
         temperature,
         rainfall,
