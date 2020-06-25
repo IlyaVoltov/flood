@@ -152,19 +152,30 @@ fig_map.update_layout(
 
 
 def generate_graph():
-    graph = html.Div(children = [html.Div(children = [dcc.Graph(
-                                                                id='int_map',
-                                                                figure=fig_map,
-                                                                style={
-                                                                    'width' : '95%',
-                                                                    'height' : '100%',
-                                                                    'paddingTop' : 0,
-                                                                    'paddingLeft': 15
-                                                                }
-                                                        )]
-                                        )
-                            ]
-                    )
+    graph = html.Div(children = [
+        html.Div(children = [
+            dcc.RadioItems(
+                        id='calc-type',
+                        options=[
+                            {'label': 'С накоплением', 'value': 'additive'},
+                            {'label': 'По дням', 'value': 'individual'}
+                        ],
+                        value='additive',
+                        labelStyle={'display': 'inline-block'}
+            ),
+            dcc.Graph(
+                    id='int_map',
+                    figure=fig_map,
+                    style={
+                        'width' : '95%',
+                        'height' : '100%',
+                        'paddingTop' : 0,
+                        'paddingLeft': 15
+                    }
+            )
+        ])
+    ])
+
     return graph
 
 layout = html.Div([
