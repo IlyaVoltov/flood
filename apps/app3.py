@@ -200,7 +200,6 @@ def generate_graph():
                             'points': [
                                 {'location': '8c95756206039444095efcf05f77c9dc'}]})
         ]),
-
         html.Div([
             dcc.Graph(id = 'bar_chart')
         ]),
