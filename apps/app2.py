@@ -80,14 +80,14 @@ fig_map.layout.sliders[0].len = 0.90
 fig_map.layout.sliders[0].x   = 0.07
 
 fig_map.layout.sliders[0].currentvalue.visible = False
-fig_map.layout.sliders[0].bordercolor = '#00a8ff'
+fig_map.layout.sliders[0].bordercolor = '#3248a8'
 fig_map.layout.sliders[0].borderwidth = 2
 fig_map.layout.sliders[0].ticklen     = 4
-fig_map.layout.sliders[0].bgcolor     = '#00a8ff'
+fig_map.layout.sliders[0].bgcolor     = '#3248a8'
 fig_map.layout.sliders[0].font = {
                                     'family' : 'Helvetica',
-                                    'size' : 18,
-                                    'color' : '#00a8ff'}
+                                    'size' : 14,
+                                    'color' : '#3248a8'}
 
 fig_map.layout.updatemenus[0].pad.r = 60
 fig_map.layout.updatemenus[0].pad.t = 40
