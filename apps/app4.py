@@ -35,25 +35,39 @@ column_names = [{"name": "Дата", "id": "date"},
                 {"name": "Место отбора проб", "id": "sampling_site"}
                 ]
 
-PAGE_SIZE = 7
+PAGE_SIZE = 8
+
+operators = [['ge ', '>='],
+            ['le ', '<='],
+            ['lt ', '<'],
+            ['gt ', '>'],
+            ['ne ', '!='],
+            ['eq ', '='],
+            ['contains '],
+            ['datestartswith ']]
 
 def generate_table():
     measure_table = dash_table.DataTable(
         id='datatable-paging',
         columns=column_names,
+
         page_current=0,
         page_size=PAGE_SIZE,
         page_action='custom',
+
+        filter_action='custom',
+        filter_query='',
+
         style_data={
             'textAlign': 'central',
             'whiteSpace': 'normal',
-	    'height': 'auto',
+	        'height': 'auto',
         },
         css=[{
             'selector': '.dash-spreadsheet td div',
             'rule': '''
-                line-height: 15px;
-                max-height: 45px; min-height: 45px; height: 45px;
+                line-height: 10px;
+                max-height: 30px; min-height: 30px; height: 30px;
                 display: block;
                 overflow-y: hidden;
             '''
@@ -66,20 +80,66 @@ def generate_table():
         ],
         tooltip_duration=None,
         style_header={
-            'backgroundColor': 'rgb(108, 117, 111)',
-            'fontWeight': 'bold'
+            'backgroundColor': 'rgb(168,168,168)',
+            'fontWeight': 'bold',
+            'textAlign': 'center'
+        },
+        style_cell={
+            'textAlign': 'center',
+            'fontSize': '12px'
         },
         style_cell_conditional=[
             {
                 'if': {
                     'filter_query': '{excess} > 100',
                 },
-                'backgroundColor': 'rgb(221, 127, 95)'
+                'backgroundColor': 'rgb(237, 151, 183)'
+            },
+            {
+                'if': {'column_id': 'date'},
+                'width': '100px'
+            },
+            {
+                'if': {'column_id': 'time_start'},
+                'width': '100px'
+            },
+            {
+                'if': {'column_id': 'number_of_samples'},
+                'width': '100px'
+            },
+            {
+                'if': {'column_id': 'excess'},
+                'width': '100px'
             }
         ]
     )
 
     return measure_table
+
+
+def split_filter_part(filter_part):
+    for operator_type in operators:
+        for operator in operator_type:
+            if operator in filter_part:
+                name_part, value_part = filter_part.split(operator, 1)
+                name = name_part[name_part.find('{') + 1: name_part.rfind('}')]
+
+                value_part = value_part.strip()
+                v0 = value_part[0]
+                if (v0 == value_part[-1] and v0 in ("'", '"', '`')):
+                    value = value_part[1: -1].replace('\\' + v0, v0)
+                else:
+                    try:
+                        value = float(value_part)
+                    except ValueError:
+                        value = value_part
+
+                # word operators need spaces after them in the filter string,
+                # but we don't want these later
+                return name, operator_type[0].strip(), value
+
+    return [None] * 3
+
 
 layout = html.Div([
     frontpage.generate_frontpage("Данные по отбору проб"),
@@ -90,9 +150,29 @@ layout = html.Div([
 
 @app.callback(
     Output('datatable-paging', 'data'),
-    [Input('datatable-paging', "page_current"),
-     Input('datatable-paging', "page_size")])
-def update_table(page_current,page_size):
-    return df.iloc[
+    [
+        Input('datatable-paging', "page_current"),
+        Input('datatable-paging', "page_size"),
+        Input('datatable-paging', "filter_query")
+    ]
+)
+def update_table(page_current,page_size, filter):
+    print(filter)
+    filtering_expressions = filter.split(' && ')
+    dff = df
+    for filter_part in filtering_expressions:
+        col_name, operator, filter_value = split_filter_part(filter_part)
+
+        if operator in ('eq', 'ne', 'lt', 'le', 'gt', 'ge'):
+            # these operators match pandas series operator method names
+            dff = dff.loc[getattr(dff[col_name], operator)(filter_value)]
+        elif operator == 'contains':
+            dff = dff.loc[dff[col_name].str.contains(filter_value)]
+        elif operator == 'datestartswith':
+            # this is a simplification of the front-end filtering logic,
+            # only works with complete fields in standard format
+            dff = dff.loc[dff[col_name].str.startswith(filter_value)]
+
+    return dff.iloc[
         page_current*page_size:(page_current+ 1)*page_size
     ].to_dict('records')

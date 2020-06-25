@@ -3,15 +3,15 @@
   margin: 0 auto;
   position: relative;
   width: 100%;
-  height: 135px;
+  height: 120px;
 }
 #logo {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 10px;
-  margin: 10px;
+  padding-top: 10px;
+  float: left;
 }
 #logo-info {
   padding: 0;
@@ -57,6 +57,9 @@
   font-size: 18px;
   font-family: Arial, Helvetica, sans-serif;
   color: rgb(255, 255, 255);
+  float: right;
+  padding-top: 30px;
+  padding-right: 20px;
 }
 #alarm-logo {
   height:84px; 
@@ -94,9 +97,9 @@ Td {
   font-family: Arial, Helvetica, sans-serif;  
   color: red;  
 }
-#wind-container {
+.weather-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
 }

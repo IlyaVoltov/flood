@@ -276,7 +276,6 @@ def get_wind_direction(wind_degrees):
 
 def get_weather_layout():
     layout = html.Div([
-
             html.Div([
                 dcc.DatePickerSingle(
                     id='my-date-picker-single',
@@ -285,7 +284,6 @@ def get_weather_layout():
                     date=dt(2020, 5, 29)
                 )
             ]),
-
             html.Div(id='wind-container', children=[
                 html.P("Направление ветра", id='wind-dir'),
                 html.Img(id='wind-icon')
@@ -294,7 +292,7 @@ def get_weather_layout():
             html.Div(id='temp-value'),
             html.Div(id='rainfall-value'),
             html.Div(id='snowfall-value')
-        ])
+        ], className='weather-container')
 
     return layout
 
@@ -314,10 +312,10 @@ def get_weather_layout():
 def get_weather_data(date):
     df = get_weather_archive('data//weather_archive.csv', date)
     icon_path = get_wind_direction(df['wind_deg'].values[0])
-    wind_speed = 'Скорость ветра, м/c \t' + str(df['wind_speed'].values[0])
-    temperature = 'Температура воздуха, °C\t' + str(df['temp'].values[0])
-    rainfall = 'Выпало дождя, мм\t' + str(df['rain_3h'].values[0])
-    snowfall = 'Выпало снега, мм\t' + str(df['snow_3h'].values[0])
+    wind_speed = 'Скорость ветра, м/c' + str(df['wind_speed'].values[0])
+    temperature = 'Температура воздуха, °C' + str(df['temp'].values[0])
+    rainfall = 'Выпало дождя, мм' + str(df['rain_3h'].values[0])
+    snowfall = 'Выпало снега, мм' + str(df['snow_3h'].values[0])
     return ([
         temperature,
         rainfall,
