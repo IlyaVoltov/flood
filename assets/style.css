@@ -83,7 +83,7 @@ Th {
   color: white;
 }
 Td {
-  background-color: rgb(237,237,237);
+  background-color: rgb(255,255,255);
 }
 #back, #forward {
   width: 45px;
@@ -97,10 +97,13 @@ Td {
   font-family: Arial, Helvetica, sans-serif;  
   color: red;  
 }
-.weather-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
+#wind-icon {
+  width: 19px;
+  height: 19px;
+  align-self: center;
 }
-
+#weather-table {
+  text-align: center;
+  font-size: 16px;
+  width: 100%;
+}

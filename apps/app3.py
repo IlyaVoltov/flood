@@ -253,8 +253,7 @@ def get_weather_archive(filename, picked_date):
     return df[df['date'] == picked_date]
 
 def get_wind_direction(wind_degrees):
-
-    if wind_degrees > 23 & wind_degrees <= 67:
+    if wind_degrees > 23 and wind_degrees <= 67:
         direction = 'NE'
     elif wind_degrees > 67 and wind_degrees <= 112:
         direction = 'E'
@@ -284,14 +283,20 @@ def get_weather_layout():
                     date=dt(2020, 5, 29)
                 )
             ]),
-            html.Div(id='wind-container', children=[
-                html.P("Направление ветра", id='wind-dir'),
-                html.Img(id='wind-icon')
-            ]),
-            html.Div(id='wind-value'),
-            html.Div(id='temp-value'),
-            html.Div(id='rainfall-value'),
-            html.Div(id='snowfall-value')
+            html.Table([
+                html.Tr([
+                    html.Th('Температура воздуха, °C'),
+                    html.Th('Скорость ветра, м/c'),
+                    html.Th('Выпало дождя, мм'),
+                    html.Th('Направление ветра')
+                ], className='weather-table-header'),
+                html.Tr([
+                    html.Td(id='wind-value'),
+                    html.Td(id='temp-value'),
+                    html.Td(id='rainfall-value'),
+                    html.Img(id='wind-icon')
+                ], className='weather-table-row')
+            ], id='weather-table')
         ], className='weather-container')
 
     return layout
@@ -301,7 +306,6 @@ def get_weather_layout():
     [
         Output('temp-value', 'children'),
         Output('rainfall-value', 'children'),
-        Output('snowfall-value', 'children'),
         Output('wind-value', 'children'),
         Output('wind-icon', 'src')
     ],
@@ -312,14 +316,13 @@ def get_weather_layout():
 def get_weather_data(date):
     df = get_weather_archive('data//weather_archive.csv', date)
     icon_path = get_wind_direction(df['wind_deg'].values[0])
-    wind_speed = 'Скорость ветра, м/c' + str(df['wind_speed'].values[0])
-    temperature = 'Температура воздуха, °C' + str(df['temp'].values[0])
-    rainfall = 'Выпало дождя, мм' + str(df['rain_3h'].values[0])
-    snowfall = 'Выпало снега, мм' + str(df['snow_3h'].values[0])
+    wind_speed = df['wind_speed'].values[0]
+    temperature = df['temp'].values[0]
+    rainfall = df['rain_3h'].values[0]
+    snowfall = df['snow_3h'].values[0]
     return ([
         temperature,
         rainfall,
-        snowfall,
         wind_speed,
         app.get_asset_url(icon_path),
     ])
