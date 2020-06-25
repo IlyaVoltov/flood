@@ -135,22 +135,22 @@ pmap = go.Figure(go.Choroplethmapbox(geojson = jsondata,
                                      marker_line_width = 0))
 
 pmap.add_trace(go.Scattermapbox(lat = [69.321521],
-                                  lon = [87.956233],
-                                  name = 'Объекты',
-                                  marker = go.scattermapbox.Marker(
-                                                                   size = 12,
-                                                                   color = 'blue',
-                                                                   opacity = 0.8,
-                                                                   symbol = 'triangle'
-                                                                   ),
-                                  text = 'Норильская ТЭЦ-3',
-                                  textposition = 'bottom center',
-                                  textfont = dict(family = "Helvetica",
-                                                  size = 14,
-                                                  color = 'black'),
-                                  mode = 'markers+text',
-                                  showlegend = False
-                                 ))
+                                lon = [87.956233],
+                                name = 'Объекты',
+                                marker = go.scattermapbox.Marker(
+                                                                size = 12,
+                                                                color = 'blue',
+                                                                opacity = 0.8,
+                                                                symbol = 'triangle'
+                                                            ),
+                                text = 'Норильская ТЭЦ-3',
+                                textposition = 'bottom center',
+                                textfont = dict(family = "Helvetica",
+                                                size = 14,
+                                                color = 'black'),
+                                mode = 'markers+text',
+                                showlegend = False
+                            ))
 
 pmap.update_layout(
                   margin = {'r' : 0,'t' : 0, 'l' : 0, 'b' : 0},
