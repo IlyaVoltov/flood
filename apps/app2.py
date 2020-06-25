@@ -60,11 +60,12 @@ agg_list = pd.concat([agg_list, eight_full])
 
 access = 'pk.eyJ1Ijoia3Vrc2Vua29zcyIsImEiOiJjazE4NDlkZTQwMmtwM2NzenRmbm9rNjF2In0.j0d6QcToTviyQ0-KdzEIMA'
 
-fig_map = px.scatter_mapbox(data_frame = agg_list,
-                            lat = 'lat',
-                            lon = 'lon',
-                            animation_frame = 'date',
-                            color_continuous_scale = ['#00a8ff', '#7A1012'],
+fig_map = px.scatter_mapbox(
+                            data_frame=agg_list,
+                            lat='lat',
+                            lon='lon',
+                            animation_frame='date',
+                            color_continuous_scale=px.colors.diverging.balance,
                             labels={
                                 "date": "Дата отбора",
                                 "excess": "Кратность превышения",
@@ -77,9 +78,9 @@ fig_map = px.scatter_mapbox(data_frame = agg_list,
                                 "excess": ":.1f",
                                 "sampling_site": True
                             },
-                            range_color = [0, 10],
-                            color = 'excess',
-                            size = np.full((1, len(agg_list.index)), 5)[0])
+                            color='excess',
+                            range_color=[0, 10],
+                            size=np.full((1, len(agg_list.index)), 5)[0])
 
 fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2500
 fig_map.layout.sliders[0].pop('currentvalue')
@@ -101,38 +102,42 @@ fig_map.layout.sliders[0].font = {'family' : 'Helvetica',
 fig_map.layout.updatemenus[0].pad.r = 60
 fig_map.layout.updatemenus[0].pad.t = 40
 
-fig_map.layout.coloraxis.colorbar = dict(thickness = 10, 
-                                         ticklen = 3,
-                                         x = 0)
+fig_map.layout.coloraxis.colorbar = dict(
+                                        thickness=10, 
+                                        ticklen=3,
+                                        tickcolor='rgb(255, 255, 255)',
+                                        x=0)
 
-fig_map.add_trace(go.Scattermapbox(lat = [69.321521],
-                                  lon = [87.956233],
-                                  name = 'Объекты',
-                                  marker = go.scattermapbox.Marker(
-                                                                   size = 12,
-                                                                   color = 'blue',
-                                                                   opacity = 0.8,
-                                                                   symbol = 'triangle'
-                                                                   ),
-                                  text = ['Норильская ТЭЦ-3'],
-                                  mode = 'markers+text',
-                                  showlegend = False
-                                 ))
-
-fig_map.update_traces(textposition = 'bottom center',
-                     textfont = dict(family = "Helvetica",
-                                     size = 16,
-                                     color = 'black'
-    ))
+fig_map.add_trace(go.Scattermapbox(
+                                lat=[69.321521],
+                                lon=[87.956233],
+                                name='Объекты',
+                                marker=go.scattermapbox.Marker(
+                                                                size = 12,
+                                                                color = 'blue',
+                                                                opacity = 0.8,
+                                                                symbol = 'triangle'
+                                                            ),
+                                text = ['Норильская ТЭЦ-3'],
+                                textfont=dict(
+                                        family="Helvetica",
+                                        size=16,
+                                        color="white"
+                                ),
+                                textposition='bottom center',
+                                mode = 'markers+text',
+                                showlegend = False
+                                )
+                )
 
 fig_map.update_layout(
                   margin = {'r' : 0,'t' : 0, 'l' : 0, 'b' : 0},
                   hovermode = 'closest',
                   hoverlabel = dict(
-                                    bgcolor = 'black', 
-                                    font_size = 10, 
+                                    bgcolor = 'white', 
+                                    font_size = 12, 
                                     font_family = 'Helvetica',
-                                    font_color = 'white'
+                                    font_color = 'black'
                                     ),
                   mapbox = dict(
                                 accesstoken = access,
@@ -141,16 +146,16 @@ fig_map.update_layout(
                                          lat = 69.444882, 
                                          lon = 87.915305
                                          ),
-                  pitch = 0,
-                  zoom = 8,   
-                  style = 'satellite'   
+                  pitch=0,
+                  zoom=8,   
+                  style='satellite'   
     )
 )
 
-#for i, date in pd.Series(agg_list.date.unique()).iteritems():
-#    date_stamp = 'Дата отбора - {}'.format(date)
-#    excess = '<br>Кратность превышения - %{marker.color}</br>'
-#   fig_map.frames[i].data[0].hovertemplate = date_stamp + excess
+# for i, date in pd.Series(agg_list.date.unique()).iteritems():
+#     date_stamp = 'Дата отбора - {}'.format(date)
+#     excess = '<br>Кратность превышения - %{marker.color}</br>'
+#     fig_map.frames[i].data[0].hovertemplate = date_stamp + excess
 
 
 def generate_graph():
