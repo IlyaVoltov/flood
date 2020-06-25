@@ -45,8 +45,9 @@ def generate_table():
         page_size=PAGE_SIZE,
         page_action='custom',
         style_data={
-            'textAlign': 'left',
+            'textAlign': 'central',
             'whiteSpace': 'normal',
+	    'height': 'auto',
         },
         css=[{
             'selector': '.dash-spreadsheet td div',
