@@ -184,17 +184,14 @@ cm.update_layout(mapbox_style = 'satellite',
                  mapbox_accesstoken = access,
                  mapbox_zoom = 7.3, 
                  mapbox_center = {'lat': 69.444882, 
-                                  'lon': 87.915305})
+                                    'lon': 87.915305})
 
 cm.update_layout(margin = {"r" : 15, "t" : 10, "l" : 0, "b" : 0})
 
 
 def generate_graph():
     graph = html.Div([
-        html.Div(style = {
-                            'display' : 'flex',
-                            'width' : '49%',
-                            'paddingLeft' : 15}, 
+        html.Div( 
             children = [
                 html.Div([
                     dcc.Graph(id = 'map', 
@@ -331,7 +328,7 @@ def get_weather_data(date):
 
 layout = html.Div([
     frontpage.generate_frontpage("Динамика ликвидации аварии"),
-    get_weather_layout(),
     generate_graph(),
-    navigation_table.table_link('/norilsk', '/norilsk/table')
+    get_weather_layout(),
+    navigation_table.table_link('/norilsk', '/norilsk/table'),
 ])
