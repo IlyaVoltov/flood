@@ -42,7 +42,7 @@ fig_map = px.scatter_mapbox(
                             lat='lat',
                             lon='lon',
                             animation_frame='date',
-                            color_continuous_scale=px.colors.diverging.balance,
+                            color_continuous_scale = ['#00a8ff', 'red'],
                             range_color=[0, 10])
 
 for i, date in enumerate(test.timestamp.unique()):
