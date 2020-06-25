@@ -65,11 +65,23 @@ fig_map = px.scatter_mapbox(data_frame = agg_list,
                             lon = 'lon',
                             animation_frame = 'date',
                             color_continuous_scale = ['#00a8ff', '#7A1012'],
-                            range_color = [0, 100],
+                            labels={
+                                "date": "Дата отбора",
+                                "excess": "Кратность превышения",
+                                "sampling_site": "Место отбора"
+                            },
+                            hover_data={
+                                "date":False,
+                                "lat": False,
+                                "lon": False,
+                                "excess": ":.1f",
+                                "sampling_site": True
+                            },
+                            range_color = [0, 10],
                             color = 'excess',
                             size = np.full((1, len(agg_list.index)), 5)[0])
 
-fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 5000
+fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2500
 fig_map.layout.sliders[0].pop('currentvalue')
 fig_map.layout.sliders[0].active = 0
 
@@ -135,10 +147,10 @@ fig_map.update_layout(
     )
 )
 
-for i, date in pd.Series(agg_list.date.unique()).iteritems():
-    date_stamp = 'Дата отбора - {}'.format(date)
-    excess = '<br>Кратность превышения - %{marker.color}</br>'
-    fig_map.frames[i].data[0].hovertemplate = date_stamp + excess
+#for i, date in pd.Series(agg_list.date.unique()).iteritems():
+#    date_stamp = 'Дата отбора - {}'.format(date)
+#    excess = '<br>Кратность превышения - %{marker.color}</br>'
+#   fig_map.frames[i].data[0].hovertemplate = date_stamp + excess
 
 
 def generate_graph():
