@@ -24,6 +24,7 @@ from dash.dependencies import Input, Output
 import frontpage
 import navigation_table
 from app import app
+from unix_time import unixTimeMillis, unixToDatetime
 
 file = 'data//features.json'
 
@@ -114,6 +115,8 @@ for day in res_df.date.unique():
         df_poly.append([day, poly, avg_excess])
 
 res = pd.DataFrame(df_poly, columns = ['date', 'polygon_id', 'avg_excess'])
+res['timestamp'] = pd.to_datetime(res['date'])
+res['unix'] = res['timestamp'].apply(lambda x: unixTimeMillis(x))
 
 p_list = []
 
@@ -127,32 +130,46 @@ cm = px.choropleth_mapbox(
                         geojson=jsondata,
                         locations='polygon_id',
                         color='avg_excess',
-                        animation_frame='date',
+                        #animation_frame='date',
                         range_color=[0, 10],
                         color_continuous_scale=['#00a8ff', 'red'])
 
-cm.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2500
-cm.layout.sliders[0].pop('currentvalue')
-cm.layout.sliders[0].active = 0
+@app.callback(
+    Output('map', 'figure'),
+    [
+        Input('year-slider', 'value')
+    ]
+)
+def update_map(date_picked):
+    for i, _ in enumerate(res['unix'].unique()):
+        anim_df = res[res['unix'] <= date_picked]
+        # TODO: how to get map_frameS?
+        map_frames = cm['frames'][0]['data'][0]
+        map_frames['locations'] = anim_df['polygon_id']
 
-# Положение слайдера и его размеры
-cm.layout.sliders[0].pad.t = 50
-cm.layout.sliders[0].len = 0.90
-cm.layout.sliders[0].x   = 0.07
 
-# Цветовая гамма слайдера
-cm.layout.sliders[0].currentvalue.visible = False
-cm.layout.sliders[0].bordercolor = '#3248a8'
-cm.layout.sliders[0].borderwidth = 2
-cm.layout.sliders[0].ticklen     = 4
-cm.layout.sliders[0].bgcolor     = '#3248a8'
-cm.layout.sliders[0].font = {'family' : 'Helvetica',
-                             'size' : 14,
-                             'color' : '#3248a8'}
+# cm.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2500
+# cm.layout.sliders[0].pop('currentvalue')
+# cm.layout.sliders[0].active = 0
 
-# Положение кнопок
-cm.layout.updatemenus[0].pad.r = 60
-cm.layout.updatemenus[0].pad.t = 40
+# # Положение слайдера и его размеры
+# cm.layout.sliders[0].pad.t = 50
+# cm.layout.sliders[0].len = 0.90
+# cm.layout.sliders[0].x   = 0.07
+
+# # Цветовая гамма слайдера
+# cm.layout.sliders[0].currentvalue.visible = False
+# cm.layout.sliders[0].bordercolor = '#3248a8'
+# cm.layout.sliders[0].borderwidth = 2
+# cm.layout.sliders[0].ticklen     = 4
+# cm.layout.sliders[0].bgcolor     = '#3248a8'
+# cm.layout.sliders[0].font = {'family' : 'Helvetica',
+#                              'size' : 14,
+#                              'color' : '#3248a8'}
+
+# # Положение кнопок
+# cm.layout.updatemenus[0].pad.r = 60
+# cm.layout.updatemenus[0].pad.t = 40
 
 # Параматры цветовой шкалы
 cm.layout.coloraxis.colorbar = dict(thickness = 10, 
@@ -162,30 +179,34 @@ cm.layout.coloraxis.colorbar = dict(thickness = 10,
 cm['data'][0]['marker_line_width'] = 0
 
 # Координаты Норильской ТЭЦ-3
-cm.add_trace(go.Scattermapbox(lat = [69.321521],
-                                  lon = [87.956233],
-                                  name = 'Объекты',
-                                  marker = go.scattermapbox.Marker(
-                                                                   size = 12,
-                                                                   color = 'blue',
-                                                                   opacity = 0.8,
-                                                                   symbol = 'triangle'
-                                                                   ),
-                                  text = 'Норильская ТЭЦ-3',
-                                  textposition = 'bottom center',
-                                  textfont = dict(family = "Helvetica",
-                                                  size = 14,
-                                                  color = 'white'),
-                                  mode = 'markers+text',
-                                  showlegend = False,
-                                  hoverinfo = 'skip'
-                                 ))
+cm.add_trace(go.Scattermapbox(
+                            lat = [69.321521],
+                            lon = [87.956233],
+                            name = 'Объекты',
+                            marker = go.scattermapbox.Marker(
+                                                            size = 12,
+                                                            color = 'blue',
+                                                            opacity = 0.8,
+                                                            symbol = 'triangle'
+                                    ),
+                            text = 'Норильская ТЭЦ-3',
+                            textposition = 'bottom center',
+                            textfont = dict(family = "Helvetica",
+                                            size = 14,
+                                            color = 'white'),
+                            mode = 'markers+text',
+                            showlegend = False,
+                            hoverinfo = 'skip'
+                        )
+            )
 
-cm.update_layout(mapbox_style = 'satellite', 
-                 mapbox_accesstoken = access,
-                 mapbox_zoom = 7.3, 
-                 mapbox_center = {'lat': 69.444882, 
-                                    'lon': 87.915305})
+cm.update_layout(
+                mapbox_style = 'satellite', 
+                mapbox_accesstoken = access,
+                mapbox_zoom = 7.3, 
+                mapbox_center = {'lat': 69.444882, 
+                                'lon': 87.915305}
+                )
 
 cm.update_layout(margin = {"r" : 15, "t" : 10, "l" : 0, "b" : 0})
 
@@ -196,15 +217,6 @@ cm.update_layout(margin = {"r" : 15, "t" : 10, "l" : 0, "b" : 0})
 
 test['date'] = pd.to_datetime(test['date'], dayfirst=True)
 test['date_only'] = test['date'].dt.date.astype('datetime64[ns]')
-
-def unixTimeMillis(dt):
-    ''' Convert datetime to unix timestamp '''
-    return int(time.mktime(dt.timetuple()))
-
-def unixToDatetime(unix):
-    ''' Convert unix timestamp to datetime. '''
-    timestamp = pd.to_datetime(unix, unit='s')
-    return timestamp
 
 def getMarks():
     ''' Returns the marks for labeling. 
