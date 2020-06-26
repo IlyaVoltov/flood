@@ -73,8 +73,7 @@ def generate_table():
             '''
         }],
         style_cell={
-            'textAlign': 'center',
-            'fontSize': '20px'
+            'textAlign': 'center'
         },
         style_cell_conditional=[
             {
