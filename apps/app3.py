@@ -125,15 +125,6 @@ for p in res.polygon_id.unique():
     p_list.append(poly_group.iloc[-1, :])
     
 
-# cm = px.choropleth_mapbox(
-#                         data_frame=res,
-#                         geojson=jsondata,
-#                         locations='polygon_id',
-#                         color='avg_excess',
-#                         animation_frame='date',
-#                         range_color=[0, 10],
-#                         color_continuous_scale=['#00a8ff', 'red'])
-
 @app.callback(
     Output('map', 'figure'),
     [
@@ -150,10 +141,11 @@ def update_map(date_picked):
                         range_color=[0, 10],
                         color_continuous_scale=['#00a8ff', 'red'])
 
-    cm.layout.coloraxis.colorbar = dict(thickness = 10, 
-                                    ticklen = 3,
-                                    tickcolor = 'white',
-                                    x = 0)
+    cm.layout.coloraxis.colorbar = dict(
+                                    thickness=10, 
+                                    ticklen=3,
+                                    tickcolor='white',
+                                    x=0)
     cm['data'][0]['marker_line_width'] = 0
 
     # Координаты Норильской ТЭЦ-3
@@ -179,86 +171,18 @@ def update_map(date_picked):
                 )
 
     cm.update_layout(
-                    mapbox_style = 'satellite', 
-                    mapbox_accesstoken = access,
-                    mapbox_zoom = 7.3, 
-                    mapbox_center = {'lat': 69.444882, 
-                                        'lon': 87.915305}
-    )
-
-    cm.update_layout(
-        margin = {"r" : 15, "t" : 10, "l" : 0, "b" : 0}
+                    mapbox_style='satellite', 
+                    mapbox_accesstoken=access,
+                    mapbox_zoom=7.3, 
+                    mapbox_center={
+                                    'lat': 69.444882, 
+                                    'lon': 87.915305},
+                    margin={
+                                "r" : 15, "t" : 10, "l" : 0, "b" : 0}             
     )
 
     return cm
 
-#cm['z'] = res.avg_excess
-# map_poly = cm['data'][0]
-# map_poly['colorscale'] = ['#00a8ff', 'red']    
-# map_poly['zmin'] = 0
-# map_poly['zmax'] = 5
-# cm_frame['z'] = result_df.avg_excess
-# cm.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2500
-# cm.layout.sliders[0].pop('currentvalue')
-# cm.layout.sliders[0].active = 0
-
-# # Положение слайдера и его размеры
-# cm.layout.sliders[0].pad.t = 50
-# cm.layout.sliders[0].len = 0.90
-# cm.layout.sliders[0].x   = 0.07
-
-# # Цветовая гамма слайдера
-# cm.layout.sliders[0].currentvalue.visible = False
-# cm.layout.sliders[0].bordercolor = '#3248a8'
-# cm.layout.sliders[0].borderwidth = 2
-# cm.layout.sliders[0].ticklen     = 4
-# cm.layout.sliders[0].bgcolor     = '#3248a8'
-# cm.layout.sliders[0].font = {'family' : 'Helvetica',
-#                              'size' : 14,
-#                              'color' : '#3248a8'}
-
-# # Положение кнопок
-# cm.layout.updatemenus[0].pad.r = 60
-# cm.layout.updatemenus[0].pad.t = 40
-
-# Параматры цветовой шкалы
-# cm.layout.coloraxis.colorbar = dict(thickness = 10, 
-#                                     ticklen = 3,
-#                                     tickcolor = 'white',
-#                                     x = 0)
-# cm['data'][0]['marker_line_width'] = 0
-
-# # Координаты Норильской ТЭЦ-3
-# cm.add_trace(go.Scattermapbox(
-#                             lat = [69.321521],
-#                             lon = [87.956233],
-#                             name = 'Объекты',
-#                             marker = go.scattermapbox.Marker(
-#                                                             size = 12,
-#                                                             color = 'blue',
-#                                                             opacity = 0.8,
-#                                                             symbol = 'triangle'
-#                                     ),
-#                             text = 'Норильская ТЭЦ-3',
-#                             textposition = 'bottom center',
-#                             textfont = dict(family = "Helvetica",
-#                                             size = 14,
-#                                             color = 'white'),
-#                             mode = 'markers+text',
-#                             showlegend = False,
-#                             hoverinfo = 'skip'
-#                         )
-#             )
-
-# cm.update_layout(
-#                 mapbox_style = 'satellite', 
-#                 mapbox_accesstoken = access,
-#                 mapbox_zoom = 7.3, 
-#                 mapbox_center = {'lat': 69.444882, 
-#                                 'lon': 87.915305}
-#                 )
-
-# cm.update_layout(margin = {"r" : 15, "t" : 10, "l" : 0, "b" : 0})
 
 test['date'] = pd.to_datetime(test['date'], dayfirst=True)
 test['date_only'] = test['date'].dt.date.astype('datetime64[ns]')
@@ -268,9 +192,10 @@ def getMarks():
         Every Nth value will be used.
     '''
     result = {}
-    for date in test['date_only'].unique():
+    for i, date in enumerate(test['date_only'].unique()):
         date = pd.to_datetime(date)
-        result[unixTimeMillis(date)] = date.date()
+        if i % 3 == 1:
+            result[unixTimeMillis(date)] = date.date()
 
     return result
 
