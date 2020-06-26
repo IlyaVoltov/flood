@@ -67,13 +67,14 @@ def generate_table():
             'selector': '.dash-spreadsheet td div',
             'rule': '''
                 line-height: 14px;
-                max-height: 33px; min-height: 33px; height: 33px;
+                max-height: 30px; min-height: 30px; height: 30px;
                 display: block;
                 overflow-y: hidden;
             '''
         }],
         style_cell={
-            'textAlign': 'center'
+            'textAlign': 'center';
+	    'fontsize': '14px';
         },
         style_cell_conditional=[
             {
