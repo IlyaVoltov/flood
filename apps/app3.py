@@ -281,13 +281,19 @@ def get_weather_archive(filename, picked_date):
         usecols=['dt_iso', 'temp', 'wind_speed', 'wind_deg', 'rain_3h', 'snow_3h'])
     df['dt_iso'] = pd.to_datetime(df['dt_iso'])
     df['date'] = pd.to_datetime(df['dt_iso']).apply(lambda x: x.date())
+    df['unix'] = df['date'].apply(lambda x: unixTimeMillis(x))
     df = df.set_index('dt_iso')
     df = df.fillna(0)
-    dff = df[df['date'] == picked_date]
+    idx = None
+    for i, unix in enumerate(df['unix'].unique()):
+        if unix == picked_date:
+            idx = i
+    if i is not None:
+        match = df.iloc[idx]
+    else:
+        match = None       
 
-    print("Выбран день - ", picked_date)
-
-    return dff
+    return match
 
 def get_wind_direction(wind_degrees):
     if wind_degrees > 23 and wind_degrees <= 67:
@@ -320,8 +326,8 @@ def get_weather_layout():
                     html.Th('Направление ветра')
                 ], className='weather-table-header'),
                 html.Tr([
-                    html.Td(id='wind-value'),
                     html.Td(id='temp-value'),
+                    html.Td(id='wind-value'),
                     html.Td(id='rainfall-value'),
                     html.Img(id='wind-icon')
                 ], className='weather-table-row')
@@ -343,18 +349,17 @@ def get_weather_layout():
     ]
 )
 def get_weather_data(date_slider):
-    date = unixToDatetime(date_slider)
-    df = get_weather_archive('data//weather_archive.csv', date)
-    if df.shape[0] > 0:
-        icon_path = get_wind_direction(df['wind_deg'].values[0])
-        wind_speed = df['wind_speed'].values[0]
-        temperature = df['temp'].values[0]
-        rainfall = df['rain_3h'].values[0]
+    df = get_weather_archive('data//weather_archive.csv', date_slider)
+    if df is not None:
+        icon_path = get_wind_direction(df['wind_deg'])
+        wind_speed = df['wind_speed']
+        temperature = df['temp']
+        rainfall = df['rain_3h']
     else:
         icon_path = get_wind_direction(0)
-        wind_speed = 0
-        temperature = 0
-        rainfall = 0
+        wind_speed = 'no results'
+        temperature = 'no results'
+        rainfall = 'no results'
     return ([
         temperature,
         rainfall,
