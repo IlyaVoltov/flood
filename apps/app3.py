@@ -130,7 +130,7 @@ cm = px.choropleth_mapbox(
                         geojson=jsondata,
                         locations='polygon_id',
                         color='avg_excess',
-                        #animation_frame='date',
+                        animation_frame='date',
                         range_color=[0, 10],
                         color_continuous_scale=['#00a8ff', 'red'])
 
@@ -144,10 +144,15 @@ def update_map(date_picked):
     for i, _ in enumerate(res['unix'].unique()):
         anim_df = res[res['unix'] <= date_picked]
         # TODO: how to get map_frameS?
-        map_frames = cm['frames'][0]['data'][0]
+        map_frames = cm['frames'][i]['data'][0]
         map_frames['locations'] = anim_df['polygon_id']
 
-
+cm['z'] = res.avg_excess
+map_poly = cm['data'][0]
+map_poly['colorscale'] = ['#00a8ff', 'red']    
+map_poly['zmin'] = 0
+map_poly['zmax'] = 5
+cm_frame['z'] = result_df.avg_excess
 # cm.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2500
 # cm.layout.sliders[0].pop('currentvalue')
 # cm.layout.sliders[0].active = 0
@@ -209,11 +214,6 @@ cm.update_layout(
                 )
 
 cm.update_layout(margin = {"r" : 15, "t" : 10, "l" : 0, "b" : 0})
-
-'''
-    Проблема с поддержкой типа datetime для dcc.Slider и её решение:
-    https://stackoverflow.com/questions/49371248/plotly-dash-has-unknown-issue-and-creates-error-loading-dependencies-by-using/51003812#51003812
-'''
 
 test['date'] = pd.to_datetime(test['date'], dayfirst=True)
 test['date_only'] = test['date'].dt.date.astype('datetime64[ns]')
