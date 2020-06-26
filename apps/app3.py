@@ -351,7 +351,7 @@ def get_weather_data(date_slider):
 
 layout = html.Div([
     frontpage.generate_frontpage("Динамика ликвидации аварии"),
-    generate_graph(),
     get_weather_layout(),
+    generate_graph(),
     navigation_table.table_link('/norilsk', '/norilsk/table'),
 ])
