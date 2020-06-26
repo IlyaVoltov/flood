@@ -125,14 +125,14 @@ for p in res.polygon_id.unique():
     p_list.append(poly_group.iloc[-1, :])
     
 
-cm = px.choropleth_mapbox(
-                        data_frame=res,
-                        geojson=jsondata,
-                        locations='polygon_id',
-                        color='avg_excess',
-                        animation_frame='date',
-                        range_color=[0, 10],
-                        color_continuous_scale=['#00a8ff', 'red'])
+# cm = px.choropleth_mapbox(
+#                         data_frame=res,
+#                         geojson=jsondata,
+#                         locations='polygon_id',
+#                         color='avg_excess',
+#                         animation_frame='date',
+#                         range_color=[0, 10],
+#                         color_continuous_scale=['#00a8ff', 'red'])
 
 @app.callback(
     Output('map', 'figure'),
@@ -141,53 +141,65 @@ cm = px.choropleth_mapbox(
     ]
 )
 def update_map(date_picked):
+    cm = px.choropleth_mapbox(
+                        data_frame=res,
+                        geojson=jsondata,
+                        color='avg_excess',
+                        animation_frame='date',
+                        range_color=[0, 10],
+                        color_continuous_scale=['#00a8ff', 'red'])
+    print("Created mapbox", type(cm))
     for i, _ in enumerate(res['unix'].unique()):
+        print("Looping over dates")
         anim_df = res[res['unix'] <= date_picked]
-        cm = px.choropleth_mapbox()
         map_frames = cm['frames'][i]['data'][0]
         map_frames['locations'] = anim_df['polygon_id']
-        map_poly = cm['data'][0]
-        map_poly['colorscale'] = ['#00a8ff', 'red']    
-        map_poly['zmin'] = 0
-        map_poly['zmax'] = 5
 
-        cm.layout.coloraxis.colorbar = dict(thickness = 10, 
+    map_poly = cm['data'][0]
+    map_poly['colorscale'] = ['#00a8ff', 'red']
+    print("Colorscale", map_poly['colorscale'])    
+    map_poly['zmin'] = 0
+    map_poly['zmax'] = 5
+
+    cm.layout.coloraxis.colorbar = dict(thickness = 10, 
                                     ticklen = 3,
                                     tickcolor = 'white',
                                     x = 0)
-        cm['data'][0]['marker_line_width'] = 0
+    cm['data'][0]['marker_line_width'] = 0
 
-        # Координаты Норильской ТЭЦ-3
-        cm.add_trace(go.Scattermapbox(
-                                    lat = [69.321521],
-                                    lon = [87.956233],
-                                    name = 'Объекты',
-                                    marker = go.scattermapbox.Marker(
-                                                                    size = 12,
-                                                                    color = 'blue',
-                                                                    opacity = 0.8,
-                                                                    symbol = 'triangle'
-                                            ),
-                                    text = 'Норильская ТЭЦ-3',
-                                    textposition = 'bottom center',
-                                    textfont = dict(family = "Helvetica",
-                                                    size = 14,
-                                                    color = 'white'),
-                                    mode = 'markers+text',
-                                    showlegend = False,
-                                    hoverinfo = 'skip'
-                                )
+    # Координаты Норильской ТЭЦ-3
+    cm.add_trace(go.Scattermapbox(
+                                lat = [69.321521],
+                                lon = [87.956233],
+                                name = 'Объекты',
+                                marker = go.scattermapbox.Marker(
+                                                            size = 12,
+                                                            color = 'blue',
+                                                            opacity = 0.8,
+                                                            symbol = 'triangle'
+                                ),
+                                text = 'Норильская ТЭЦ-3',
+                                textposition = 'bottom center',
+                                textfont = dict(family = "Helvetica",
+                                                size = 14,
+                                                color = 'white'),
+                                mode = 'markers+text',
+                                showlegend = False,
+                                hoverinfo = 'skip'
                     )
+                )
 
-        cm.update_layout(
-                        mapbox_style = 'satellite', 
-                        mapbox_accesstoken = access,
-                        mapbox_zoom = 7.3, 
-                        mapbox_center = {'lat': 69.444882, 
+    cm.update_layout(
+                    mapbox_style = 'satellite', 
+                    mapbox_accesstoken = access,
+                    mapbox_zoom = 7.3, 
+                    mapbox_center = {'lat': 69.444882, 
                                         'lon': 87.915305}
-                        )
+    )
 
-        cm.update_layout(margin = {"r" : 15, "t" : 10, "l" : 0, "b" : 0})
+    cm.update_layout(
+        margin = {"r" : 15, "t" : 10, "l" : 0, "b" : 0}
+    )
 
     return cm
 
@@ -278,9 +290,8 @@ def generate_graph():
         html.Div( 
             children = [
                 html.Div([
-                    dcc.Graph(id = 'map', 
-                        figure = cm,
-                        hoverData = {
+                    dcc.Graph(id='map',
+                        hoverData={
                             'points': [
                                 {'location': '8c95756206039444095efcf05f77c9dc'}]})
         ]),

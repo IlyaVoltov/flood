@@ -294,6 +294,8 @@ def generate_graph():
     html.Div(id = 'basic_area')
 ])
     return graph
+
+    
 @app.callback(Output('basic_area', 'children'),
             [Input('tabs', 'value')])
 def render_content(tab):
