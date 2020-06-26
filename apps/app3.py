@@ -181,6 +181,13 @@ def update_map(date_picked):
                                 "r" : 15, "t" : 10, "l" : 0, "b" : 0}             
     )
 
+    cm.update_traces(marker_showscale = True)
+
+    cm.update_layout(
+                font = dict(color = 'white'),
+                coloraxis = dict(showscale = True)
+    )
+
     return cm
 
 
