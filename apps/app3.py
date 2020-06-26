@@ -141,25 +141,14 @@ for p in res.polygon_id.unique():
     ]
 )
 def update_map(date_picked):
+    df = res[res['unix'] <= date_picked]
     cm = px.choropleth_mapbox(
-                        data_frame=res,
+                        data_frame=df,
                         geojson=jsondata,
+                        locations='polygon_id',
                         color='avg_excess',
-                        animation_frame='date',
                         range_color=[0, 10],
                         color_continuous_scale=['#00a8ff', 'red'])
-    print("Created mapbox", type(cm))
-    for i, _ in enumerate(res['unix'].unique()):
-        print("Looping over dates")
-        anim_df = res[res['unix'] <= date_picked]
-        map_frames = cm['frames'][i]['data'][0]
-        map_frames['locations'] = anim_df['polygon_id']
-
-    map_poly = cm['data'][0]
-    map_poly['colorscale'] = ['#00a8ff', 'red']
-    print("Colorscale", map_poly['colorscale'])    
-    map_poly['zmin'] = 0
-    map_poly['zmax'] = 5
 
     cm.layout.coloraxis.colorbar = dict(thickness = 10, 
                                     ticklen = 3,
