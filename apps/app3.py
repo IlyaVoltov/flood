@@ -143,16 +143,17 @@ cm = px.choropleth_mapbox(
 def update_map(date_picked):
     for i, _ in enumerate(res['unix'].unique()):
         anim_df = res[res['unix'] <= date_picked]
-        # TODO: how to get map_frameS?
         map_frames = cm['frames'][i]['data'][0]
         map_frames['locations'] = anim_df['polygon_id']
 
-cm['z'] = res.avg_excess
+    return cm
+
+#cm['z'] = res.avg_excess
 map_poly = cm['data'][0]
 map_poly['colorscale'] = ['#00a8ff', 'red']    
 map_poly['zmin'] = 0
 map_poly['zmax'] = 5
-cm_frame['z'] = result_df.avg_excess
+# cm_frame['z'] = result_df.avg_excess
 # cm.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2500
 # cm.layout.sliders[0].pop('currentvalue')
 # cm.layout.sliders[0].active = 0
