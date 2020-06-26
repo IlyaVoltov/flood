@@ -66,7 +66,7 @@ def generate_table():
         css=[{
             'selector': '.dash-spreadsheet td div',
             'rule': '''
-                line-height: 14px;
+                line-height: 18px;
                 max-height: 30px; min-height: 30px; height: 30px;
                 display: block;
                 overflow-y: hidden;
@@ -74,7 +74,7 @@ def generate_table():
         }],
         style_cell={
             'textAlign': 'center',
-            'fontSize': '12px'
+            'fontSize': '14px'
         },
         style_cell_conditional=[
             {
