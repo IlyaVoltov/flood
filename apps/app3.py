@@ -180,7 +180,7 @@ def update_map(date_picked):
                     margin={
                                 "r" : 15, "t" : 10, "l" : 0, "b" : 0}             
     )
-    
+
     return cm
 
 
@@ -194,7 +194,7 @@ def getMarks():
     result = {}
     for i, date in enumerate(test['date_only'].unique()):
         date = pd.to_datetime(date)
-        if i % 3 == 1:
+        if i % 2 == 1:
             result[unixTimeMillis(date)] = date.date()
 
     return result
@@ -214,7 +214,8 @@ def generate_graph():
                 min = unixTimeMillis(test['date_only'].min()),
                 max = unixTimeMillis(test['date_only'].max()),
                 value = unixTimeMillis(test['date_only'].min()),
-                marks=getMarks()
+                marks=getMarks(),
+                className='class-slider'
             ),
         html.Div([
             dcc.Graph(id = 'bar_chart')
