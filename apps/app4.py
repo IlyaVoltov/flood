@@ -61,7 +61,7 @@ def generate_table():
         style_data={
             'textAlign': 'central',
             'whiteSpace': 'normal',
-	        'height': '33px',
+	        'height': 'auto',
         },
         css=[{
             'selector': '.dash-spreadsheet td div',
