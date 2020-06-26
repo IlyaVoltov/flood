@@ -67,7 +67,7 @@ def generate_table():
             'selector': '.dash-spreadsheet td div',
             'rule': '''
                 line-height: 14px;
-                max-height: 42px; min-height: 42px; height: 42px;
+                max-height: 56px; min-height: 56px; height: 56px;
                 display: block;
                 overflow-y: hidden;
             '''
