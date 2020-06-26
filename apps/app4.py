@@ -72,18 +72,6 @@ def generate_table():
                 overflow-y: hidden;
             '''
         }],
-        tooltip_data=[
-            {
-                column: {'value': str(value), 'type': 'markdown'}
-                for column, value in row.items()
-            } for row in df.to_dict('rows')
-        ],
-        tooltip_duration=None,
-        style_header={
-            'backgroundColor': 'rgb(168,168,168)',
-            'fontWeight': 'bold',
-            'textAlign': 'center'
-        },
         style_cell={
             'textAlign': 'center',
             'fontSize': '12px'
