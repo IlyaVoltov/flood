@@ -20,7 +20,7 @@ from dash.dependencies import Input, Output
 
 from app import app
 
-df = pd.read_csv('data//Разлив - Лист1.csv', 
+df = pd.read_csv('data//flood.csv', 
     usecols=['date', 'time_start', 'time_end', 'number_of_samples', 'val', 'standard', 'sampling_site'])
 df = df.replace(',', '.', regex = True)
 df['val'] = df['val'].astype('float64')
