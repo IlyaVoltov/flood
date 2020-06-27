@@ -12,6 +12,7 @@ import base64
 import dash_core_components as dcc
 import dash_html_components as html
 import frontpage
+from app import app
 
 
 def table_link():
@@ -30,8 +31,7 @@ def table_link():
                 html.A(
                 html.Img(
                     id='alarm-logo',
-                    src='data:image/jpg;base64,{}'.format(
-                        base64.b64encode(open('assets/alarm.png', 'rb').read()).decode())
+                    src=app.get_asset_url('alarm.png')
                 ), href='/norilsk')
             ]
             )], className='table-line-two')
