@@ -78,7 +78,7 @@ fig_map.layout.sliders[0].x   = 0.07
 
 # Цветовая гамма слайдера
 fig_map.layout.sliders[0].currentvalue.visible = False
-fig_map.layout.sliders[0].bordercolor = '#3248a8'
+fig_map.layout.sliders[0].bordercolor = '#489e87'
 fig_map.layout.sliders[0].borderwidth = 2
 fig_map.layout.sliders[0].ticklen     = 4
 fig_map.layout.sliders[0].bgcolor     = '#489e87'
@@ -89,19 +89,19 @@ fig_map.layout.sliders[0].font = {'family' : 'Helvetica',
 # Положение кнопок
 fig_map.layout.updatemenus[0].pad.r = 70
 fig_map.layout.updatemenus[0].pad.t = 25
-fig_map.layout.updatemenus[0].font = dict(color = '#489e87')
+fig_map.layout.updatemenus[0].font = dict(color = '#3248a8')
 
 fig_map.update_traces(marker_showscale = True)
 
 # Параматры цветовой шкалы
 map_marker.colorbar = dict(thickness = 10,
-                        x = 0)
+                           x = 0)
 
 # Координаты Норильской ТЭЦ-3
 fig_map.add_trace(go.Scattermapbox(lat = [69.321521],
-                                lon = [87.956233],
-                                name = 'Объекты',
-                                marker = go.scattermapbox.Marker(
+                                  lon = [87.956233],
+                                  name = 'Объекты',
+                                  marker = go.scattermapbox.Marker(
                                                                    size = 12,
                                                                    color = 'blue',
                                                                    opacity = 0.8,
@@ -184,13 +184,13 @@ first_map.layout.sliders[0].x   = 0.07
 
 # Цветовая гамма слайдера
 first_map.layout.sliders[0].currentvalue.visible = False
-first_map.layout.sliders[0].bordercolor = '#3248a8'
+first_map.layout.sliders[0].bordercolor = '#489e87'
 first_map.layout.sliders[0].borderwidth = 2
 first_map.layout.sliders[0].ticklen     = 4
-first_map.layout.sliders[0].bgcolor     = '#3248a8'
+first_map.layout.sliders[0].bgcolor     = '#489e87'
 first_map.layout.sliders[0].font = {'family' : 'Helvetica',
                                   'size' : 16,
-                                  'color' : '#3248a8'}
+                                  'color' : '#489e87'}
 
 # Положение кнопок
 first_map.layout.updatemenus[0].pad.r = 70
@@ -267,7 +267,7 @@ tab_style = {
 tab_selected_style = {
     'borderTop': '1px solid #d6d6d6',
     'borderBottom': '1px solid #d6d6d6',
-    'backgroundColor': '#3248a8',
+    'backgroundColor': '#489e87',
     'color': 'white',
     'padding': '6px',
     'fontFamily' : 'Helvetica',
