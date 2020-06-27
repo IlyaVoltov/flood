@@ -208,18 +208,19 @@ def generate_graph():
                         hoverData={
                             'points': [
                                 {'location': '8c95756206039444095efcf05f77c9dc'}]})
-        ]),
+        ], className='map-container'),
         dcc.Slider(
                 id='year-slider',
                 min = unixTimeMillis(test['date_only'].min()),
                 max = unixTimeMillis(test['date_only'].max()),
                 value = unixTimeMillis(test['date_only'].min()),
                 marks=getMarks(),
-                className='class-slider'
+                className='class-slider',
             ),
+        get_weather_layout(),
         html.Div([
             dcc.Graph(id = 'bar_chart')
-        ]),
+        ], className='bar-chart-container'),
     ])
 ])
 
@@ -352,6 +353,5 @@ def get_weather_data(date_slider):
 layout = html.Div([
     frontpage.generate_frontpage("Динамика ликвидации аварии"),
     generate_graph(),
-    get_weather_layout(),
     navigation_table.table_link('/norilsk', '/norilsk/table'),
 ])
