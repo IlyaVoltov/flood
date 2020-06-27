@@ -95,13 +95,13 @@ fig_map.update_traces(marker_showscale = True)
 
 # Параматры цветовой шкалы
 map_marker.colorbar = dict(thickness = 10,
-                           x = 0)
+                        x = 0)
 
 # Координаты Норильской ТЭЦ-3
 fig_map.add_trace(go.Scattermapbox(lat = [69.321521],
-                                  lon = [87.956233],
-                                  name = 'Объекты',
-                                  marker = go.scattermapbox.Marker(
+                                lon = [87.956233],
+                                name = 'Объекты',
+                                marker = go.scattermapbox.Marker(
                                                                    size = 12,
                                                                    color = 'blue',
                                                                    opacity = 0.8,
