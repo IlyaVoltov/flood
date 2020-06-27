@@ -173,7 +173,7 @@ map_marker['cmin'] = 0
 map_marker['cmax'] = 5
 map_marker['color'] = test.excess
     
-first_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 1000
+first_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2000
 first_map.layout.sliders[0].pop('currentvalue')
 first_map.layout.sliders[0].active = 0
 
