@@ -20,7 +20,7 @@ import navigation_table
 from dash.dependencies import Input, Output
 from app import app
 
-test = pd.read_csv('data//Разлив - Лист1.csv',
+test = pd.read_csv('data//flood.csv',
                     usecols = ['date', 'time_start', 'time_end', 'sampling_site', 'lon', 'lat', 'val', 'standard'])
 
 test = test.replace(',', '.', regex = True)
