@@ -67,7 +67,7 @@ map_marker['cmin'] = 0
 map_marker['cmax'] = 5
 map_marker['color'] = test.excess
     
-fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 1000
+fig_map.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 2000
 fig_map.layout.sliders[0].pop('currentvalue')
 fig_map.layout.sliders[0].active = 0
 
@@ -81,15 +81,15 @@ fig_map.layout.sliders[0].currentvalue.visible = False
 fig_map.layout.sliders[0].bordercolor = '#3248a8'
 fig_map.layout.sliders[0].borderwidth = 2
 fig_map.layout.sliders[0].ticklen     = 4
-fig_map.layout.sliders[0].bgcolor     = '#3248a8'
+fig_map.layout.sliders[0].bgcolor     = '#489e87'
 fig_map.layout.sliders[0].font = {'family' : 'Helvetica',
                                   'size' : 16,
-                                  'color' : '#3248a8'}
+                                  'color' : '#489e87'}
 
 # Положение кнопок
 fig_map.layout.updatemenus[0].pad.r = 70
 fig_map.layout.updatemenus[0].pad.t = 25
-fig_map.layout.updatemenus[0].font = dict(color = '#3248a8')
+fig_map.layout.updatemenus[0].font = dict(color = '#489e87')
 
 fig_map.update_traces(marker_showscale = True)
 
