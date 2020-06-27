@@ -30,7 +30,7 @@ file = 'data//features.json'
 
 access = 'pk.eyJ1Ijoia3Vrc2Vua29zcyIsImEiOiJjazE4NDlkZTQwMmtwM2NzenRmbm9rNjF2In0.j0d6QcToTviyQ0-KdzEIMA'
 
-test = pd.read_csv('data//Разлив - Лист1.csv',
+test = pd.read_csv('data//flood.csv',
                         usecols = ['date', 'time_start', 'time_end', 'sampling_site', 'lon', 'lat', 'val', 'standard'])
 
 test = test.replace(',', '.', regex = True)
