@@ -98,8 +98,8 @@ Td {
   color: red;  
 }
 #wind-icon {
-  width: 19px;
-  height: 19px;
+  width: 21px;
+  height: 21px;
   align-self: center;
 }
 #weather-table {
@@ -116,3 +116,7 @@ Td {
 .bar-chart-container {
   height: max-content;
 }
+#year-slider {
+  rgb(74,157,134);
+}
+  
