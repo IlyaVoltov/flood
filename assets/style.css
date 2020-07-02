@@ -117,8 +117,8 @@ Td {
   height: max-content;
 }
 #year-slider {
-  rgb(74,157,134);
-  font-weight: bolder;
+  background-color: rgb(74,157,134);
+  font-weight: bold 900;
   font-family: Arial, Helvetica, sans-serif;
 }
   
