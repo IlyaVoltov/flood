@@ -1,16 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-"""
-    Четвертая страница;
-        - "Данные по отбору проб";
-        - Таблица с данными:
-            - Дата и время отбора;
-            - Номер забора;
-            - Забор;
-            - Место
-"""
-
 import dash_table
 import frontpage
 import pandas as pd
@@ -59,7 +49,8 @@ def generate_table():
         filter_query='',
 
         style_data={
-            'textAlign': 'central',
+            'textAlign': 'center',
+            'verticalAlign' : 'middle',
             'whiteSpace': 'normal',
 	        'height': 'auto',
         },
@@ -72,34 +63,45 @@ def generate_table():
                 overflow-y: hidden;
             '''
         }],
+        
+        style_header = {
+            'backgroundColor': '#489e87',
+            'color' :'white'
+        },
+        
         style_cell={
             'textAlign': 'center',
-	    'fontsize': '14px',
+            'verticalAlign' : 'middle',
+            'fontSize': '14px',
+            'fontFamily' : 'Helvetica',
+            'fontColor' : '#737373'
         },
         style_cell_conditional=[
             {
                 'if': {
                     'filter_query': '{excess} > 100',
                 },
-                'backgroundColor': 'rgb(237, 151, 183)'
+                'backgroundColor': 'red',
+                'color' = 'white'
             },
             {
                 'if': {'column_id': 'date'},
-                'width': '100px'
+                'width': '10%'
             },
             {
                 'if': {'column_id': 'time_start'},
-                'width': '100px'
+                'width': '10%'
             },
             {
                 'if': {'column_id': 'number_of_samples'},
-                'width': '100px'
+                'width': '10%'
             },
             {
                 'if': {'column_id': 'excess'},
-                'width': '100px'
+                'width': '10%'
             }
-        ]
+        ],
+        style_as_list_view = True,
     )
 
     return measure_table
@@ -164,3 +166,4 @@ def update_table(page_current,page_size, filter):
     return dff.iloc[
         page_current*page_size:(page_current+ 1)*page_size
     ].to_dict('records')
+
