@@ -117,7 +117,8 @@ Td {
   height: max-content;
 }
 #year-slider {
-  font-weight: bold;
-  font-family: verdana, sans-serif;
+  font-weight: 900;
+  font-family: "Verdana", sans-serif;
+  font-stretch: ultra-condensed;
 }
   
