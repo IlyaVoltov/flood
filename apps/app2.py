@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[ ]:
+
+
+#!/usr/bin/env python
+# coding: utf-8
+
 """
     Вторая страница:
         - "Мониторинг отбора проб";
@@ -51,12 +57,7 @@ for i, date in enumerate(test.timestamp.unique()):
     map_frames['lat'] = anim_df.lat
     map_frames['lon'] = anim_df.lon
     map_frames['customdata'] = anim_df
-    map_frames['hovertemplate'] = 'Результат отбора : %{customdata[5]:.2f} мг/дм3' + \
-                                '<br>Превышение нормы в %{customdata[8]:.1f} раз</br>' +  \
-                                '<br>Дата отбора : %{customdata[0]}' + \
-                                '<br>Время начала отбора : %{customdata[1]}' + \
-                                '<br>Время окончания отбора : %{customdata[2]}' + \
-                                '<br>Место : %{customdata[7]}'
+    map_frames['hovertemplate'] = 'Результат отбора : %{customdata[5]:.2f} мг/дм3' +                                 '<br>Превышение нормы в %{customdata[8]:.1f} раз</br>' +                                  '<br>Дата отбора : %{customdata[0]}' +                                 '<br>Время начала отбора : %{customdata[1]}' +                                 '<br>Время окончания отбора : %{customdata[2]}' +                                 '<br>Место : %{customdata[7]}'
     map_frames['marker'] = go.scattermapbox.Marker(size = 14,
                                                    color = anim_df.excess)
     
@@ -157,12 +158,7 @@ for i, date in enumerate(test.timestamp.unique()):
     map_frames['lat'] = anim_df.lat
     map_frames['lon'] = anim_df.lon
     map_frames['customdata'] = anim_df
-    map_frames['hovertemplate'] = 'Результат отбора : %{customdata[5]:.2f} мг/дм3' + \
-                                '<br>Превышение нормы в %{customdata[8]:.1f} раз</br>' +  \
-                                '<br>Дата отбора : %{customdata[0]}' + \
-                                '<br>Время начала отбора : %{customdata[1]}' + \
-                                '<br>Время окончания отбора : %{customdata[2]}' + \
-                                '<br>Место : %{customdata[7]}'
+    map_frames['hovertemplate'] = 'Результат отбора : %{customdata[5]:.2f} мг/дм3' +                                 '<br>Превышение нормы в %{customdata[8]:.1f} раз</br>' +                                  '<br>Дата отбора : %{customdata[0]}' +                                 '<br>Время начала отбора : %{customdata[1]}' +                                 '<br>Время окончания отбора : %{customdata[2]}' +                                 '<br>Место : %{customdata[7]}'
     map_frames['marker'] = go.scattermapbox.Marker(size = 14,
                                                    color = anim_df.excess)
     
@@ -195,7 +191,7 @@ first_map.layout.sliders[0].font = {'family' : 'Helvetica',
 # Положение кнопок
 first_map.layout.updatemenus[0].pad.r = 70
 first_map.layout.updatemenus[0].pad.t = 25
-first_map.layout.updatemenus[0].font = dict(color = '#3248a8')
+first_map.layout.updatemenus[0].font = dict(color = '#489e87')
 
 # Параматры цветовой шкалы
 map_marker.colorbar = dict(thickness = 10,
@@ -305,7 +301,7 @@ def render_content(tab):
                                             id = 'int_map',
                                             figure = first_map,
                                             style = {'width' : '95%',
-                                                    'height' : 600,
+                                                    'height' : '100%',
                                                     'paddingTop' : 20,
                                                     'paddingLeft': 20})]
                         )
@@ -315,7 +311,7 @@ def render_content(tab):
                                             id = 'int_map',
                                             figure = fig_map,
                                             style = {'width' : '95%',
-                                                    'height' : 600,
+                                                    'height' : '100%',
                                                     'paddingTop' : 20,
                                                     'paddingLeft': 20}
                                             )
@@ -327,3 +323,4 @@ layout = html.Div([
     generate_graph(),
     navigation_table.table_link('/', '/norilsk2')
 ])
+
