@@ -194,7 +194,6 @@ def getMarks():
     result = {}
     for i, date in enumerate(test['date_only'].unique()):
         date = pd.to_datetime(date)
-        if i % 2 == 1:
             result[unixTimeMillis(date)] = date.date()
 
     return result
