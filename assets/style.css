@@ -65,6 +65,10 @@
   height:84px; 
   width:84px;
 }
+#alarm-logo:hover {
+  height:90px; 
+  width:90px;
+}
 #table-objects {
   border-collapse: collapse;
   border: 1px solid white;
@@ -93,12 +97,12 @@ Td {
   border-collapse: collapse;
 }
 #back:hover {
-  width: 50px;
-  height: 45px;
+  width: 51px;
+  height: 46px;
 }
 #forward:hover {
-  width: 50px;
-  height: 45px;
+  width: 51px;
+  height: 46px;
 }
 .table-line-two {
   font-weight: bold;
@@ -106,8 +110,8 @@ Td {
   color: red;  
 }
 #wind-icon {
-  width: 21px;
-  height: 21px;
+  width: 22px;
+  height: 22px;
   align-self: center;
 }
 #weather-table {
