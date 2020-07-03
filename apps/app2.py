@@ -260,6 +260,10 @@ tab_style = {
     'color' : '#696969'
 }
 
+tab_style:hover = {
+     'height'  : '46px',
+}
+
 tab_selected_style = {
     'borderTop': '1px solid #d6d6d6',
     'borderBottom': '1px solid #d6d6d6',
