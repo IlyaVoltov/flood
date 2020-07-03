@@ -131,6 +131,7 @@ Td {
 #year-slider {
   font-weight: 900;
   font-family: "Verdana", sans-serif;
+  padding: -5px;
 }
 .tab_style:hover = {
     height: 46px;
